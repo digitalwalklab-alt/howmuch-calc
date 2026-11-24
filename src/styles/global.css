@@ -697,6 +697,12 @@ h3 {
   font-size: 0.82rem;
 }
 
+.table-scroll .info-table th,
+.table-scroll .info-table td {
+  white-space: nowrap;
+  padding: 10px 12px;
+}
+
 .table-scroll .ledger th:first-child {
   padding-left: 0;
 }
@@ -794,7 +800,6 @@ h3 {
   margin-top: 48px;
   padding-top: 36px;
   border-top: 1px solid var(--border);
-  max-width: 78ch;
 }
 
 .guide-section h2 {
@@ -810,8 +815,8 @@ h3 {
 }
 
 .guide-article {
-  max-width: 780px;
-  margin: 0 auto;
+  max-width: 100%;
+  margin: 0;
   padding-top: 0;
   border-top: none;
 }

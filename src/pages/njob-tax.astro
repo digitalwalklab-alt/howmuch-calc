@@ -122,20 +122,19 @@ const jsonLd = [
         </div>
       </div>
 
-      <div class="field-row">
-        <div class="field">
-          <span class="field-label"><span>부업 3.3% 원천징수 여부</span></span>
-          <div class="segmented" role="radiogroup" aria-label="3.3% 원천징수 여부">
-            <button type="button" class="seg-btn active" id="withhold-no">안 뗌 (애드센스·스토어)</button>
-            <button type="button" class="seg-btn" id="withhold-yes">3.3% 공제됨</button>
-          </div>
+      <div class="field">
+        <span class="field-label"><span>부업 3.3% 원천징수 여부</span></span>
+        <div class="segmented" role="radiogroup" aria-label="3.3% 원천징수 여부">
+          <button type="button" class="seg-btn active" id="withhold-no">안 뗌 (애드센스·스토어)</button>
+          <button type="button" class="seg-btn" id="withhold-yes">3.3% 공제됨 (프리랜서)</button>
         </div>
-        <div class="field">
-          <label class="field-label" for="njob-dep"><span>부양가족 수 (본인 포함)</span></label>
-          <div class="input-wrap">
-            <input type="number" id="njob-dep" class="input-text has-unit num" value="1" min="1" max="10" step="1" />
-            <span class="input-unit">명</span>
-          </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="njob-dep"><span>부양가족 수 (본인 포함)</span></label>
+        <div class="input-wrap">
+          <input type="number" id="njob-dep" class="input-text has-unit num" value="1" min="1" max="10" step="1" />
+          <span class="input-unit">명</span>
         </div>
       </div>
     </section>
