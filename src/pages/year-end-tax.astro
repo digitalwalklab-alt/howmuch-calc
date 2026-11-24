@@ -1,0 +1,420 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+
+const faqItems = [
+  {
+    q: '신용카드와 체크카드는 어떤 비율로 쓰는 게 가장 유리한가요?',
+    a: '총급여의 25%까지는 어떤 카드를 써도 공제가 되지 않으므로 혜택이 좋은 신용카드를 쓰고, 25%를 넘긴 시점부터는 공제율이 2배 높은 체크카드·현금영수증(30%)이나 전통시장·대중교통(40%)을 사용하는 것이 절세 효과가 가장 큽니다.',
+  },
+  {
+    q: '연금저축과 IRP는 12월 말에 한꺼번에 넣어도 세액공제를 받나요?',
+    a: '네, 해당 연도 12월 31일(영업일 마감 전)까지 입금된 금액 전체가 그해 연말정산 세액공제 대상에 포함됩니다. 연금저축은 최대 600만 원, IRP 합산 최대 900만 원까지 공제받을 수 있습니다.',
+  },
+  {
+    q: '월세 세액공제는 집주인 동의가 필요한가요?',
+    a: '집주인의 동의는 필요 없습니다. 총급여 8,000만 원 이하 무주택 세대주(국민주택규모 85㎡ 이하 또는 기준시가 4억 원 이하 주택)이고 전입신고가 되어 있다면 임대차계약서 사본과 계좌이체 내역만으로 공제 신청이 가능합니다.',
+  },
+  {
+    q: '예상 절세액이 나오면 무조건 그만큼 통장으로 환급받나요?',
+    a: '실제 환급액은 1년간 회사에서 미리 뗀 기납부 소득세 한도 내에서 돌려받습니다. 결정세액이 0원이 되면 그 이상은 추가 환급되지 않으므로, 본인 원천징수영수증의 결정세액을 함께 확인하는 것이 좋습니다.',
+  },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: '연말정산 환급·절세 시뮬레이터 (카드·연금저축·IRP·월세)',
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: 'All',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  },
+];
+---
+
+<BaseLayout
+  title="연말정산 환급·절세 시뮬레이터 (카드 25% · 연금저축/IRP · 월세)"
+  description="총급여 25% 카드 공제 황금비율, 연금저축·IRP 900만 원 세액공제, 월세 세액공제까지 연말정산 3대 핵심 절세 금액과 남은 공제 한도를 원 단위로 한 번에 계산합니다."
+  canonicalPath="/year-end-tax/"
+  breadcrumbCategory="세무 · N잡"
+  jsonLd={jsonLd}
+>
+  <div class="calc-header">
+    <nav class="breadcrumb" aria-label="경로">
+      <a href="/">얼마야</a>
+      <span>/</span>
+      <span>세무 · N잡</span>
+    </nav>
+    <h1>연말정산 환급·절세 시뮬레이터</h1>
+    <p class="page-lead">
+      신용·체크카드 25% 문턱, 연금저축·IRP(최대 900만 원), 월세 세액공제까지 3대 핵심 절세 금액과 연말까지 남은 절세 여력을 원 단위로 확인하세요.
+    </p>
+  </div>
+
+  <div class="calc-grid">
+    <section class="panel" aria-label="입력 조건">
+      <div class="panel-title">
+        <span>연봉 · 지출 · 납입액 입력</span>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="ye-salary">
+          <span>연간 총급여 (세전 연봉)</span>
+          <span class="field-hint num" id="ye-threshold-hint">카드 공제 문턱(25%): 1,250만원</span>
+        </label>
+        <div class="input-wrap">
+          <input type="text" inputmode="numeric" autocomplete="off" id="ye-salary" class="input-text has-unit num" value="50,000,000" />
+          <span class="input-unit">원</span>
+        </div>
+        <div class="preset-row">
+          <button type="button" class="preset-btn" data-target="ye-salary" data-val="36000000">3,600만</button>
+          <button type="button" class="preset-btn" data-target="ye-salary" data-val="50000000">5,000만</button>
+          <button type="button" class="preset-btn" data-target="ye-salary" data-val="70000000">7,000만</button>
+          <button type="button" class="preset-btn" data-target="ye-salary" data-val="90000000">9,000만</button>
+        </div>
+      </div>
+
+      <hr style="border: none; border-top: 1px solid var(--border); margin: 20px 0;" />
+
+      <p class="form-section-title">1. 카드 · 현금영수증 연간 사용액</p>
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label" for="ye-credit">
+            <span>신용카드 (15%)</span>
+            <span class="field-hint num" id="ye-credit-kor">1,400만원</span>
+          </label>
+          <div class="input-wrap">
+            <input type="text" inputmode="numeric" autocomplete="off" id="ye-credit" class="input-text has-unit num" value="14,000,000" />
+            <span class="input-unit">원</span>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label" for="ye-debit">
+            <span>체크·현금영수증 (30%)</span>
+            <span class="field-hint num" id="ye-debit-kor">600만원</span>
+          </label>
+          <div class="input-wrap">
+            <input type="text" inputmode="numeric" autocomplete="off" id="ye-debit" class="input-text has-unit num" value="6,000,000" />
+            <span class="input-unit">원</span>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="ye-market">
+          <span>전통시장 · 대중교통 (40%)</span>
+          <span class="field-hint num" id="ye-market-kor">150만원</span>
+        </label>
+        <div class="input-wrap">
+          <input type="text" inputmode="numeric" autocomplete="off" id="ye-market" class="input-text has-unit num" value="1,500,000" />
+          <span class="input-unit">원</span>
+        </div>
+      </div>
+
+      <hr style="border: none; border-top: 1px solid var(--border); margin: 20px 0;" />
+
+      <p class="form-section-title">2. 연금저축 · IRP 납입액 (합산 최대 900만)</p>
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label" for="ye-pension">
+            <span>연금저축 (최대 600만)</span>
+            <span class="field-hint num" id="ye-pension-kor">400만원</span>
+          </label>
+          <div class="input-wrap">
+            <input type="text" inputmode="numeric" autocomplete="off" id="ye-pension" class="input-text has-unit num" value="4,000,000" />
+            <span class="input-unit">원</span>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label" for="ye-irp">
+            <span>IRP 개인형 퇴직연금</span>
+            <span class="field-hint num" id="ye-irp-kor">200만원</span>
+          </label>
+          <div class="input-wrap">
+            <input type="text" inputmode="numeric" autocomplete="off" id="ye-irp" class="input-text has-unit num" value="2,000,000" />
+            <span class="input-unit">원</span>
+          </div>
+        </div>
+      </div>
+
+      <hr style="border: none; border-top: 1px solid var(--border); margin: 20px 0;" />
+
+      <p class="form-section-title">3. 월세 세액공제 (무주택 · 연봉 8,000만 이하)</p>
+      <div class="field">
+        <label class="field-label" for="ye-rent">
+          <span>연간 월세 총 납입액 (최대 1,000만 한도)</span>
+          <span class="field-hint num" id="ye-rent-kor">0원</span>
+        </label>
+        <div class="input-wrap">
+          <input type="text" inputmode="numeric" autocomplete="off" id="ye-rent" class="input-text has-unit num" value="0" />
+          <span class="input-unit">원</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel panel-result" aria-live="polite" aria-label="계산 결과">
+      <div class="panel-title">
+        <span>연말정산 예상 절세(환급) 요약</span>
+      </div>
+
+      <div class="result-summary" id="ye-box">
+        <div class="result-label">3대 핵심 항목 예상 총 절세액 (지방소득세 포함)</div>
+        <div class="result-figure num" id="ye-total-save">+ 0원</div>
+        <div class="result-sub" id="ye-sub">적용 예상 한계세율(지방세 포함) 16.5% 기준 시뮬레이션입니다.</div>
+      </div>
+
+      <table class="ledger">
+        <tbody>
+          <tr>
+            <th>카드 최저사용금액 (총급여 25%)</th>
+            <td id="ye-out-thresh">0원</td>
+          </tr>
+          <tr>
+            <th>카드 소득공제 인정액 (기본+추가)</th>
+            <td id="ye-out-card-ded">0원</td>
+          </tr>
+          <tr>
+            <th>① 카드 공제 예상 절세액</th>
+            <td id="ye-out-card-save" class="pos">+ 0원</td>
+          </tr>
+          <tr>
+            <th>② 연금저축·IRP 세액공제 (<span id="ye-pension-rate">16.5%</span>)</th>
+            <td id="ye-out-pension-save" class="pos">+ 0원</td>
+          </tr>
+          <tr>
+            <th>③ 월세 세액공제 (<span id="ye-rent-rate">18.7%</span>)</th>
+            <td id="ye-out-rent-save" class="pos">+ 0원</td>
+          </tr>
+          <tr class="total-row">
+            <th>예상 총 절세(환급) 합계</th>
+            <td id="ye-out-total" class="pos">+ 0원</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="disclaimer-box" id="ye-tip-box" style="margin-top: 16px; background: var(--surface-tint); border-color: #cce7e4; color: var(--brand-ink);">
+        <strong>연말 추가 절세 여력:</strong> <span id="ye-tip-text">연금저축·IRP 한도를 채우면 추가 환급이 가능합니다.</span>
+      </div>
+
+      <div class="action-row">
+        <button type="button" class="btn-secondary" id="ye-copy">결과 복사</button>
+        <button type="button" class="btn-secondary" id="ye-reset">초기화</button>
+      </div>
+    </section>
+  </div>
+
+  <article class="guide-section">
+    <h2>2026 연말정산 3대 핵심 공제 기준표</h2>
+    <table class="info-table">
+      <thead>
+        <tr>
+          <th>항목</th>
+          <th>공제율 (지방소득세 포함)</th>
+          <th>연간 공제 한도</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>신용카드 / 체크·현금 / 전통·교통</td><td>소득공제 15% / 30% / 40%</td><td>기본 300만(7천 초과 250만) + 추가 300만(200만)</td></tr>
+        <tr><td>연금저축 + IRP 세액공제</td><td>5,500만 이하 16.5% / 초과 13.2%</td><td>연금저축 600만 · 합산 900만 원</td></tr>
+        <tr><td>월세 세액공제 (8,000만 이하)</td><td>5,500만 이하 18.7% / 초과 16.5%</td><td>연간 월세 1,000만 원 한도</td></tr>
+      </tbody>
+    </table>
+
+    <h3>자주 묻는 질문 (FAQ)</h3>
+    <div class="faq-list">
+      {faqItems.map((item) => (
+        <details class="faq-item">
+          <summary>{item.q}</summary>
+          <p>{item.a}</p>
+        </details>
+      ))}
+    </div>
+
+    <div class="disclaimer-box">
+      <strong>유의사항:</strong> 본 계산기는 직장인의 핵심 3대 절세 항목(카드·연금저축/IRP·월세)의 절세 효과를
+      빠르게 가늠하는 시뮬레이터입니다. 실제 최종 환급액은 기납부 세액, 부양가족 인적공제, 의료비·교육비·기부금 등
+      기타 공제 내역에 따라 달라지므로 홈택스 연말정산 간소화 서비스에서 최종 확인하시기 바랍니다.
+    </div>
+  </article>
+
+  <RelatedTools currentPath="/year-end-tax/" />
+
+  <script>
+    import { bindWonInput, formatKoreanUnit, formatWon, parseWon, setWonInputValue } from '../lib/currency';
+
+    function calcEarnedDeduction(salary: number): number {
+      if (salary <= 5_000_000) return salary * 0.7;
+      if (salary <= 15_000_000) return 3_500_000 + (salary - 5_000_000) * 0.4;
+      if (salary <= 45_000_000) return 7_500_000 + (salary - 15_000_000) * 0.15;
+      if (salary <= 100_000_000) return 12_000_000 + (salary - 45_000_000) * 0.05;
+      return Math.min(20_000_000, 14_750_000 + (salary - 100_000_000) * 0.02);
+    }
+
+    function estimateMarginalRate(salary: number): number {
+      if (salary <= 0) return 0;
+      const earnedInc = Math.max(0, salary - calcEarnedDeduction(salary));
+      const estBase = Math.max(0, earnedInc - 1_500_000 - Math.min(8_000_000, salary * 0.085));
+      if (estBase <= 14_000_000) return 0.06;
+      if (estBase <= 50_000_000) return 0.15;
+      if (estBase <= 88_000_000) return 0.24;
+      if (estBase <= 150_000_000) return 0.35;
+      if (estBase <= 300_000_000) return 0.38;
+      return 0.40;
+    }
+
+    const salIn = document.getElementById('ye-salary') as HTMLInputElement;
+    const creditIn = document.getElementById('ye-credit') as HTMLInputElement;
+    const creditHint = document.getElementById('ye-credit-kor') as HTMLElement;
+    const debitIn = document.getElementById('ye-debit') as HTMLInputElement;
+    const debitHint = document.getElementById('ye-debit-kor') as HTMLElement;
+    const marketIn = document.getElementById('ye-market') as HTMLInputElement;
+    const marketHint = document.getElementById('ye-market-kor') as HTMLElement;
+    const pensionIn = document.getElementById('ye-pension') as HTMLInputElement;
+    const pensionHint = document.getElementById('ye-pension-kor') as HTMLElement;
+    const irpIn = document.getElementById('ye-irp') as HTMLInputElement;
+    const irpHint = document.getElementById('ye-irp-kor') as HTMLElement;
+    const rentIn = document.getElementById('ye-rent') as HTMLInputElement;
+    const rentHint = document.getElementById('ye-rent-kor') as HTMLElement;
+
+    let lastSummary = '';
+
+    function update() {
+      const salary = parseWon(salIn.value);
+      const threshold = Math.round(salary * 0.25);
+
+      (document.getElementById('ye-threshold-hint') as HTMLElement).textContent =
+        `카드 공제 문턱(25%): ${formatKoreanUnit(threshold)}`;
+
+      const credit = parseWon(creditIn.value);
+      const debit = parseWon(debitIn.value);
+      const market = parseWon(marketIn.value);
+      creditHint.textContent = formatKoreanUnit(credit);
+      debitHint.textContent = formatKoreanUnit(debit);
+      marketHint.textContent = formatKoreanUnit(market);
+
+      let remThresh = threshold;
+      const effCredit = Math.max(0, credit - remThresh);
+      remThresh = Math.max(0, remThresh - credit);
+      const effDebit = Math.max(0, debit - remThresh);
+      remThresh = Math.max(0, remThresh - debit);
+      const effMarket = Math.max(0, market - remThresh);
+
+      const baseLimit = salary <= 70_000_000 ? 3_000_000 : 2_500_000;
+      const addLimit = salary <= 70_000_000 ? 3_000_000 : 2_000_000;
+
+      const cardBaseDed = salary > 0 ? Math.min(baseLimit, Math.round(effCredit * 0.15 + effDebit * 0.30)) : 0;
+      const cardAddDed = salary > 0 ? Math.min(addLimit, Math.round(effMarket * 0.40)) : 0;
+      const cardTotalDed = cardBaseDed + cardAddDed;
+
+      const marginalWithLocal = estimateMarginalRate(salary) * 1.1;
+      const cardSave = Math.round(cardTotalDed * marginalWithLocal);
+
+      const rawPension = parseWon(pensionIn.value);
+      const rawIrp = parseWon(irpIn.value);
+      pensionHint.textContent = formatKoreanUnit(rawPension);
+      irpHint.textContent = formatKoreanUnit(rawIrp);
+
+      const pension = Math.min(6_000_000, rawPension);
+      const pensionEligible = salary > 0 ? Math.min(9_000_000, pension + rawIrp) : 0;
+      const pensionRate = salary <= 55_000_000 ? 0.165 : 0.132;
+      const pensionSave = Math.round(pensionEligible * pensionRate);
+
+      const rent = parseWon(rentIn.value);
+      rentHint.textContent = formatKoreanUnit(rent);
+      const rentEligible = salary > 0 && salary <= 80_000_000 ? Math.min(10_000_000, rent) : 0;
+      const rentRate = salary <= 55_000_000 ? 0.187 : salary <= 80_000_000 ? 0.165 : 0;
+      const rentSave = Math.round(rentEligible * rentRate);
+
+      const totalSave = cardSave + pensionSave + rentSave;
+
+      (document.getElementById('ye-total-save') as HTMLElement).textContent = `+ ${formatWon(totalSave)}`;
+      (document.getElementById('ye-sub') as HTMLElement).textContent =
+        salary > 0
+          ? `추정 한계세율(지방세 포함) ${(marginalWithLocal * 100).toFixed(1)}% 기준 예상 절세액입니다.`
+          : '총급여와 지출·납입액을 입력하면 예상 절세액이 계산됩니다.';
+
+      (document.getElementById('ye-out-thresh') as HTMLElement).textContent = formatWon(threshold);
+      (document.getElementById('ye-out-card-ded') as HTMLElement).textContent = formatWon(cardTotalDed);
+      (document.getElementById('ye-out-card-save') as HTMLElement).textContent = `+ ${formatWon(cardSave)}`;
+      (document.getElementById('ye-pension-rate') as HTMLElement).textContent = `${(pensionRate * 100).toFixed(1)}%`;
+      (document.getElementById('ye-out-pension-save') as HTMLElement).textContent = `+ ${formatWon(pensionSave)}`;
+      (document.getElementById('ye-rent-rate') as HTMLElement).textContent =
+        salary > 80_000_000 ? '대상 제외' : `${(rentRate * 100).toFixed(1)}%`;
+      (document.getElementById('ye-out-rent-save') as HTMLElement).textContent = `+ ${formatWon(rentSave)}`;
+      (document.getElementById('ye-out-total') as HTMLElement).textContent = `+ ${formatWon(totalSave)}`;
+
+      const tips: string[] = [];
+      const remPension = Math.max(0, 9_000_000 - pensionEligible);
+      if (salary > 0 && remPension > 0) {
+        const extraP = Math.round(remPension * pensionRate);
+        tips.push(`연금저축·IRP에 ${formatWon(remPension)} 추가 납입 시 최대 +${formatWon(extraP)} 추가 환급`);
+      }
+      const remCardBase = Math.max(0, baseLimit - cardBaseDed);
+      if (salary > 0 && remCardBase > 0) {
+        const extraC = Math.round(remCardBase * marginalWithLocal);
+        tips.push(`카드 기본공제 한도가 ${formatWon(remCardBase)} 남아 체크카드 사용 시 최대 +${formatWon(extraC)} 추가 절세`);
+      }
+      if (salary > 80_000_000 && rent > 0) {
+        tips.push('총급여 8,000만 원 초과로 월세 세액공제는 제외되었습니다(현금영수증 소득공제 신청 권장)');
+      }
+
+      (document.getElementById('ye-tip-text') as HTMLElement).textContent =
+        salary === 0
+          ? '총급여를 입력하면 연말까지 추가로 챙길 수 있는 절세 한도를 안내합니다.'
+          : tips.length > 0
+            ? tips.join(' · ')
+            : '카드 기본공제와 연금저축·IRP 공제 한도를 모두 알차게 채우셨습니다!';
+
+      lastSummary = `[얼마야] 연말정산 핵심 절세 시뮬레이션 (총급여 ${formatWon(salary)})\n- 카드 소득공제 절세: +${formatWon(cardSave)}\n- 연금저축·IRP 세액공제: +${formatWon(pensionSave)}\n- 월세 세액공제: +${formatWon(rentSave)}\n- 예상 총 절세액: +${formatWon(totalSave)}`;
+    }
+
+    bindWonInput(salIn, update);
+    bindWonInput(creditIn, update, creditHint);
+    bindWonInput(debitIn, update, debitHint);
+    bindWonInput(marketIn, update, marketHint);
+    bindWonInput(pensionIn, update, pensionHint);
+    bindWonInput(irpIn, update, irpHint);
+    bindWonInput(rentIn, update, rentHint);
+
+    document.querySelectorAll<HTMLButtonElement>('.preset-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const target = document.getElementById(btn.dataset.target || '') as HTMLInputElement | null;
+        if (target && btn.dataset.val) {
+          setWonInputValue(target, Number(btn.dataset.val));
+          update();
+        }
+      });
+    });
+
+    const btnCopy = document.getElementById('ye-copy') as HTMLButtonElement;
+    btnCopy.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(lastSummary);
+        btnCopy.textContent = '복사 완료!';
+        setTimeout(() => (btnCopy.textContent = '결과 복사'), 1500);
+      } catch {
+        btnCopy.textContent = '복사 실패';
+        setTimeout(() => (btnCopy.textContent = '결과 복사'), 1500);
+      }
+    });
+
+    const btnReset = document.getElementById('ye-reset') as HTMLButtonElement;
+    btnReset.addEventListener('click', () => {
+      [salIn, creditIn, debitIn, marketIn, pensionIn, irpIn, rentIn].forEach((el) => setWonInputValue(el, 0));
+      update();
+      btnReset.textContent = '초기화 완료';
+      setTimeout(() => (btnReset.textContent = '초기화'), 1200);
+    });
+
+    update();
+  </script>
+</BaseLayout>

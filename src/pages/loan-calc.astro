@@ -1,0 +1,368 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+
+const faqItems = [
+  {
+    q: '원리금균등상환과 원금균등상환 중 어떤 게 더 유리한가요?',
+    a: '총 이자 부담은 매달 원금을 먼저 줄여나가는 원금균등상환이 가장 적습니다. 다만 초반 월 납입액이 원리금균등보다 높기 때문에, 초기 현금흐름이 빠듯하거나 매달 일정한 금액으로 예산을 관리하고 싶다면 원리금균등상환이 유리합니다.',
+  },
+  {
+    q: '거치 기간을 두면 이자가 얼마나 늘어나나요?',
+    a: '거치 기간 동안은 원금을 갚지 않고 이자만 내기 때문에 초반 월 부담은 줄어들지만, 그만큼 원금이 줄지 않아 전체 대출 기간 동안 내는 총 이자는 크게 늘어납니다.',
+  },
+  {
+    q: '전세대출은 보통 어떤 상환방식을 쓰나요?',
+    a: '전세대출(버팀목, 시중은행 전세자금대출 등)은 대부분 만기일시상환 방식을 사용해 매달 이자만 납부하고, 계약 만료 시 보증금을 돌려받아 원금을 한 번에 상환합니다.',
+  },
+  {
+    q: '대출 금리가 0.5%p 내려가면 이자가 얼마나 줄어드나요?',
+    a: '예를 들어 3억 원을 30년 원리금균등으로 빌릴 때 금리가 연 4.5%에서 4.0%로 0.5%p만 내려가도 월 납입액이 약 8.7만 원, 30년 총 이자는 약 3,150만 원 줄어듭니다.',
+  },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: '대출 이자 · 상환방식 비교 계산기 (원리금균등·원금균등·만기일시)',
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: 'All',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  },
+];
+---
+
+<BaseLayout
+  title="대출 이자 · 상환방식 비교 계산기 (원리금균등 vs 원금균등 vs 만기일시)"
+  description="대출 원금(원 단위), 금리, 기간, 거치기간을 입력하면 원리금균등·원금균등·만기일시 3가지 상환방식의 월 납입액과 총 이자 차이를 한 화면에서 바로 비교합니다."
+  canonicalPath="/loan-calc/"
+  breadcrumbCategory="주거 · 대출"
+  jsonLd={jsonLd}
+>
+  <div class="calc-header">
+    <nav class="breadcrumb" aria-label="경로">
+      <a href="/">얼마야</a>
+      <span>/</span>
+      <span>주거 · 대출</span>
+    </nav>
+    <h1>대출 이자 · 상환방식 비교 계산기</h1>
+    <p class="page-lead">
+      주택담보대출, 전세대출, 신용대출의 원리금균등·원금균등·만기일시 3가지 상환방식을 한 화면에서 동시에 비교해 가장 유리한 방식을 찾아보세요.
+    </p>
+  </div>
+
+  <div class="calc-grid">
+    <!-- Input Panel -->
+    <section class="panel" aria-label="입력 조건">
+      <div class="panel-title">
+        <span>대출 조건 입력</span>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="loan-principal">
+          <span>대출 원금</span>
+          <span class="field-hint num" id="loan-principal-kor">3억원</span>
+        </label>
+        <div class="input-wrap">
+          <input type="text" inputmode="numeric" autocomplete="off" id="loan-principal" class="input-text has-unit num" value="300,000,000" />
+          <span class="input-unit">원</span>
+        </div>
+        <div class="preset-row">
+          <button type="button" class="preset-btn" data-won-target="loan-principal" data-val="50000000">5,000만</button>
+          <button type="button" class="preset-btn" data-won-target="loan-principal" data-val="100000000">1억</button>
+          <button type="button" class="preset-btn" data-won-target="loan-principal" data-val="300000000">3억</button>
+          <button type="button" class="preset-btn" data-won-target="loan-principal" data-val="500000000">5억</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="loan-rate">
+          <span>연 대출 금리</span>
+          <span class="field-hint">연 이자율 (%)</span>
+        </label>
+        <div class="input-wrap">
+          <input type="number" id="loan-rate" class="input-text has-unit num" value="4.2" min="0" max="24" step="0.1" />
+          <span class="input-unit">%</span>
+        </div>
+        <div class="preset-row">
+          <button type="button" class="preset-btn" data-num-target="loan-rate" data-val="3.5">3.5%</button>
+          <button type="button" class="preset-btn" data-num-target="loan-rate" data-val="4.0">4.0%</button>
+          <button type="button" class="preset-btn" data-num-target="loan-rate" data-val="4.5">4.5%</button>
+          <button type="button" class="preset-btn" data-num-target="loan-rate" data-val="5.5">5.5%</button>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label" for="loan-years">
+            <span>대출 기간</span>
+          </label>
+          <div class="input-wrap">
+            <input type="number" id="loan-years" class="input-text has-unit num" value="30" min="1" max="50" step="1" />
+            <span class="input-unit">년</span>
+          </div>
+          <div class="preset-row">
+            <button type="button" class="preset-btn" data-num-target="loan-years" data-val="2">2년</button>
+            <button type="button" class="preset-btn" data-num-target="loan-years" data-val="5">5년</button>
+            <button type="button" class="preset-btn" data-num-target="loan-years" data-val="10">10년</button>
+            <button type="button" class="preset-btn" data-num-target="loan-years" data-val="30">30년</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="loan-grace">
+            <span>거치 기간 (이자만 납부)</span>
+          </label>
+          <div class="input-wrap">
+            <input type="number" id="loan-grace" class="input-text has-unit num" value="0" min="0" max="10" step="1" />
+            <span class="input-unit">년</span>
+          </div>
+          <div class="preset-row">
+            <button type="button" class="preset-btn" data-num-target="loan-grace" data-val="0">없음</button>
+            <button type="button" class="preset-btn" data-num-target="loan-grace" data-val="1">1년</button>
+            <button type="button" class="preset-btn" data-num-target="loan-grace" data-val="3">3년</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Result Panel -->
+    <section class="panel panel-result" aria-live="polite" aria-label="계산 결과">
+      <div class="panel-title">
+        <span>3대 상환방식 동시 비교</span>
+      </div>
+
+      <div class="result-summary" id="loan-box">
+        <div class="result-label">원리금균등 월 납입액 (가장 많이 선택)</div>
+        <div class="result-figure num" id="loan-epi-month">0원</div>
+        <div class="result-sub" id="loan-sub">원금균등 선택 시 원리금균등보다 총 이자를 0원 절약할 수 있습니다.</div>
+      </div>
+
+      <div class="table-scroll">
+        <table class="ledger">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--border);">
+              <th>비교 항목</th>
+              <th style="text-align: right;">원리금균등</th>
+              <th style="text-align: right;">원금균등</th>
+              <th style="text-align: right;">만기일시</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>첫 달 상환액</th>
+              <td id="epi-first">0원</td>
+              <td id="ep-first">0원</td>
+              <td id="bul-first">0원</td>
+            </tr>
+            <tr>
+              <th>마지막 달 상환액</th>
+              <td id="epi-last">0원</td>
+              <td id="ep-last">0원</td>
+              <td id="bul-last">0원</td>
+            </tr>
+            <tr>
+              <th>총 대출 이자</th>
+              <td id="epi-int" class="neg">0원</td>
+              <td id="ep-int" class="pos">0원</td>
+              <td id="bul-int" class="neg">0원</td>
+            </tr>
+            <tr class="total-row">
+              <th>총 상환금액</th>
+              <td id="epi-tot">0원</td>
+              <td id="ep-tot">0원</td>
+              <td id="bul-tot">0원</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="disclaimer-box" style="margin-top: 16px; background: var(--surface-tint); border-color: #cce7e4; color: var(--brand-ink);">
+        <strong>이자 절약 포인트:</strong> <span id="loan-saving-tip">원금균등상환이 총 이자 부담이 가장 적습니다.</span>
+      </div>
+
+      <div class="action-row">
+        <button type="button" class="btn-secondary" id="loan-copy">결과 복사</button>
+        <button type="button" class="btn-secondary" id="loan-reset">초기화</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Editorial SEO Guide & FAQ -->
+  <article class="guide-section">
+    <h2>대출 상환방식 3가지, 내 상황에 맞는 선택 기준</h2>
+    <ul>
+      <li><strong>원리금균등상환:</strong> 매달 원금과 이자를 합쳐 똑같은 금액을 냅니다. 매달 고정 지출을 관리하기 쉬워 직장인 주택담보대출·신용대출에서 가장 많이 선택합니다.</li>
+      <li><strong>원금균등상환:</strong> 매달 같은 원금을 갚아나가므로 시간이 지날수록 이자가 줄어들어 <strong>총 이자 비용이 가장 적습니다.</strong> 초기 월 상환 여력이 충분할 때 유리합니다.</li>
+      <li><strong>만기일시상환:</strong> 대출 기간 동안 이자만 내다가 만기에 원금을 한 번에 갚습니다. 전세대출이나 단기 자금 운용에 적합하지만 총 이자 부담은 가장 큽니다.</li>
+    </ul>
+
+    <h3>자주 묻는 질문 (FAQ)</h3>
+    <div class="faq-list">
+      {faqItems.map((item) => (
+        <details class="faq-item">
+          <summary>{item.q}</summary>
+          <p>{item.a}</p>
+        </details>
+      ))}
+    </div>
+
+    <div class="disclaimer-box">
+      <strong>유의사항:</strong> 본 계산기는 고정금리 월 복리 기준 시뮬레이션이며, 실제 금융기관 대출 실행 시
+      변동금리 조정, 일할 계산(월 일수 차이), 중도상환수수료, 인지세 등에 따라 소폭 차이가 발생할 수 있습니다.
+    </div>
+  </article>
+
+  <RelatedTools currentPath="/loan-calc/" />
+
+  <script>
+    import { bindWonInput, formatKoreanUnit, formatWon, parseWon, setWonInputValue } from '../lib/currency';
+
+    const principalIn = document.getElementById('loan-principal') as HTMLInputElement;
+    const principalHint = document.getElementById('loan-principal-kor') as HTMLElement;
+    const rateIn = document.getElementById('loan-rate') as HTMLInputElement;
+    const yearsIn = document.getElementById('loan-years') as HTMLInputElement;
+    const graceIn = document.getElementById('loan-grace') as HTMLInputElement;
+
+    let lastSummary = '';
+
+    function update() {
+      const P = parseWon(principalIn.value);
+      principalHint.textContent = formatKoreanUnit(P);
+
+      const annualRate = Math.max(0, Math.min(30, Number(rateIn.value) || 0));
+      const years = Math.max(1, Math.min(50, Math.floor(Number(yearsIn.value) || 1)));
+      const totalMonths = years * 12;
+
+      const rawGraceYears = Math.max(0, Math.floor(Number(graceIn.value) || 0));
+      const graceMonths = Math.min(totalMonths - 1, rawGraceYears * 12);
+      const repayMonths = Math.max(1, totalMonths - graceMonths);
+
+      const r = annualRate / 100 / 12;
+
+      if (P === 0) {
+        (document.getElementById('loan-epi-month') as HTMLElement).textContent = '0원';
+        (document.getElementById('loan-sub') as HTMLElement).textContent = '대출 원금과 금리를 입력하면 3가지 상환방식을 비교합니다.';
+        ['epi-first', 'ep-first', 'bul-first', 'epi-last', 'ep-last', 'bul-last', 'epi-int', 'ep-int', 'bul-int', 'epi-tot', 'ep-tot', 'bul-tot'].forEach(
+          (id) => ((document.getElementById(id) as HTMLElement).textContent = '0원')
+        );
+        (document.getElementById('loan-saving-tip') as HTMLElement).textContent = '대출 조건을 입력하면 상환방식별 이자 차이를 계산합니다.';
+        lastSummary = '[얼마야] 대출 이자 비교: 대출 원금 0원';
+        return;
+      }
+
+      const graceMonthInt = P * r;
+      const graceTotalInt = graceMonthInt * graceMonths;
+
+      // 1. 원리금균등 (EPI)
+      const epiRepayPmt =
+        r === 0 ? P / repayMonths : (P * (r * Math.pow(1 + r, repayMonths))) / (Math.pow(1 + r, repayMonths) - 1);
+      const epiFirst = graceMonths > 0 ? graceMonthInt : epiRepayPmt;
+      const epiLast = epiRepayPmt;
+      const epiTotal = graceTotalInt + epiRepayPmt * repayMonths;
+      const epiInt = Math.max(0, epiTotal - P);
+
+      // 2. 원금균등 (EP)
+      const epPrincipalMonth = P / repayMonths;
+      const epRepayFirst = epPrincipalMonth + P * r;
+      const epFirst = graceMonths > 0 ? graceMonthInt : epRepayFirst;
+      const epLast = epPrincipalMonth + epPrincipalMonth * r;
+      const epInt = graceTotalInt + (P * r * (repayMonths + 1)) / 2;
+      const epTotal = P + epInt;
+
+      // 3. 만기일시 (Bullet)
+      const bulFirst = P * r;
+      const bulLast = P + P * r;
+      const bulInt = P * r * totalMonths;
+      const bulTotal = P + bulInt;
+
+      const saveVsEpi = Math.max(0, epiInt - epInt);
+      const saveVsBul = Math.max(0, bulInt - epiInt);
+
+      (document.getElementById('loan-epi-month') as HTMLElement).textContent = formatWon(epiRepayPmt);
+      (document.getElementById('loan-sub') as HTMLElement).textContent =
+        graceMonths > 0
+          ? `거치 ${rawGraceYears}년간 월 ${formatWon(graceMonthInt)} 납부 후, 상환 기간 매월 ${formatWon(epiRepayPmt)} 납부`
+          : `원금균등 선택 시 원리금균등보다 총 이자를 ${formatWon(saveVsEpi)} 절약할 수 있습니다.`;
+
+      (document.getElementById('epi-first') as HTMLElement).textContent = formatWon(epiFirst);
+      (document.getElementById('ep-first') as HTMLElement).textContent = formatWon(epFirst);
+      (document.getElementById('bul-first') as HTMLElement).textContent = formatWon(bulFirst);
+
+      (document.getElementById('epi-last') as HTMLElement).textContent = formatWon(epiLast);
+      (document.getElementById('ep-last') as HTMLElement).textContent = formatWon(epLast);
+      (document.getElementById('bul-last') as HTMLElement).textContent = formatWon(bulLast);
+
+      (document.getElementById('epi-int') as HTMLElement).textContent = formatWon(epiInt);
+      (document.getElementById('ep-int') as HTMLElement).textContent = formatWon(epInt);
+      (document.getElementById('bul-int') as HTMLElement).textContent = formatWon(bulInt);
+
+      (document.getElementById('epi-tot') as HTMLElement).textContent = formatWon(epiTotal);
+      (document.getElementById('ep-tot') as HTMLElement).textContent = formatWon(epTotal);
+      (document.getElementById('bul-tot') as HTMLElement).textContent = formatWon(bulTotal);
+
+      (document.getElementById('loan-saving-tip') as HTMLElement).textContent =
+        `만기일시 대비 원리금균등은 ${formatWon(saveVsBul)}, 원금균등은 ${formatWon(saveVsBul + saveVsEpi)}의 총 이자를 아낄 수 있습니다.`;
+
+      lastSummary = `[얼마야] 대출 이자 비교 (${formatKoreanUnit(P)} / 연 ${annualRate}% / ${years}년)\n- 원리금균등: 월 ${formatWon(epiRepayPmt)} (총이자 ${formatWon(epiInt)})\n- 원금균등: 첫달 ${formatWon(epFirst)} → 막달 ${formatWon(epLast)} (총이자 ${formatWon(epInt)})\n- 만기일시: 월이자 ${formatWon(bulFirst)} (총이자 ${formatWon(bulInt)})`;
+    }
+
+    bindWonInput(principalIn, update, principalHint);
+    [rateIn, yearsIn, graceIn].forEach((el) => el.addEventListener('input', update));
+
+    document.querySelectorAll<HTMLButtonElement>('.preset-btn[data-won-target]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const target = document.getElementById(btn.dataset.wonTarget || '') as HTMLInputElement | null;
+        if (target && btn.dataset.val) {
+          setWonInputValue(target, Number(btn.dataset.val));
+          update();
+        }
+      });
+    });
+
+    document.querySelectorAll<HTMLButtonElement>('.preset-btn[data-num-target]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const target = document.getElementById(btn.dataset.numTarget || '') as HTMLInputElement | null;
+        if (target && btn.dataset.val) {
+          target.value = btn.dataset.val;
+          update();
+        }
+      });
+    });
+
+    const btnCopy = document.getElementById('loan-copy') as HTMLButtonElement;
+    btnCopy.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(lastSummary);
+        btnCopy.textContent = '복사 완료!';
+        setTimeout(() => (btnCopy.textContent = '결과 복사'), 1500);
+      } catch {
+        btnCopy.textContent = '복사 실패';
+        setTimeout(() => (btnCopy.textContent = '결과 복사'), 1500);
+      }
+    });
+
+    const btnReset = document.getElementById('loan-reset') as HTMLButtonElement;
+    btnReset.addEventListener('click', () => {
+      setWonInputValue(principalIn, 0);
+      rateIn.value = '0';
+      yearsIn.value = '1';
+      graceIn.value = '0';
+      update();
+      btnReset.textContent = '초기화 완료';
+      setTimeout(() => (btnReset.textContent = '초기화'), 1200);
+    });
+
+    update();
+  </script>
+</BaseLayout>

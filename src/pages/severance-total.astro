@@ -1,0 +1,397 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+
+const faqItems = [
+  {
+    q: '퇴직금은 정확히 며칠 이상 근무해야 받을 수 있나요?',
+    a: '계속근로기간이 1년(365일) 이상이고, 4주 평균 1주간 소정근로시간이 15시간 이상인 근로자라면 정규직·계약직·아르바이트 여부와 무관하게 퇴직금을 받을 수 있습니다.',
+  },
+  {
+    q: '자발적으로 퇴사해도 실업급여를 받을 수 있는 경우가 있나요?',
+    a: '원칙적으로 자진 퇴사는 실업급여 대상이 아니지만, 임금체불, 최저임금 미달, 직장 내 괴롭힘, 통근 왕복 3시간 이상(사업장 이전 등), 질병·부상으로 업무 수행이 곤란한 경우 등 법정 정당한 이직 사유가 인정되면 수급이 가능합니다.',
+  },
+  {
+    q: '미사용 연차수당도 퇴직금 계산에 포함되나요?',
+    a: '퇴직 전전년도에 발생해 퇴직 전년에 사용하지 못해 수당으로 받은 연차수당의 3/12은 퇴직금 산정 평균임금에 포함됩니다. 다만 퇴사 시점에 비로소 발생하는 미사용 연차수당은 평균임금에 포함되지 않고 별도로 지급됩니다.',
+  },
+  {
+    q: '퇴직금은 IRP 계좌로만 받아야 하나요?',
+    a: '네, 원칙적으로 퇴직금은 개인형 퇴직연금(IRP) 계좌로 이전 지급됩니다. 단, 퇴직금이 300만 원 이하이거나 만 55세 이후 퇴직하는 경우 등 예외 사유에 해당하면 일반 계좌로 수령할 수 있습니다.',
+  },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: '퇴사 시 총 수령액 통합 계산기',
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: 'All',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  },
+];
+---
+
+<BaseLayout
+  title="퇴사 시 총 수령액 통합 계산기 (퇴직금 + 연차수당 + 실업급여)"
+  description="입사일과 퇴사일, 월급(원 단위), 남은 연차만 입력하면 퇴직금·미사용 연차수당·실업급여 총 예상 수령액을 한 화면에서 한 번에 계산합니다."
+  canonicalPath="/severance-total/"
+  breadcrumbCategory="퇴사 · 급여"
+  jsonLd={jsonLd}
+>
+  <div class="calc-header">
+    <nav class="breadcrumb" aria-label="경로">
+      <a href="/">얼마야</a>
+      <span>/</span>
+      <span>퇴사 · 급여</span>
+    </nav>
+    <h1>퇴사 시 총 수령액 통합 계산기</h1>
+    <p class="page-lead">
+      퇴직금, 미사용 연차수당, 실업급여를 따로 찾을 필요 없이 원 단위로 한 번에 합산해 퇴사 후 자금 계획을 세워보세요.
+    </p>
+  </div>
+
+  <div class="calc-grid">
+    <!-- Input Panel -->
+    <section class="panel" aria-label="입력 조건">
+      <div class="panel-title">
+        <span>근무 · 급여 정보 입력</span>
+        <span class="field-hint num" id="tenure-badge">재직 1,096일</span>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label" for="start-date"><span>입사일</span></label>
+          <input type="date" id="start-date" class="input-text num" value="2023-11-24" />
+        </div>
+        <div class="field">
+          <label class="field-label" for="end-date"><span>퇴사일 (마지막 근무 다음날)</span></label>
+          <input type="date" id="end-date" class="input-text num" value="2026-11-24" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="monthly-pay">
+          <span>최근 3개월 월평균 급여 (세전)</span>
+          <span class="field-hint num" id="monthly-pay-kor">350만원</span>
+        </label>
+        <div class="input-wrap">
+          <input type="text" inputmode="numeric" autocomplete="off" id="monthly-pay" class="input-text has-unit num" value="3,500,000" />
+          <span class="input-unit">원</span>
+        </div>
+        <div class="preset-row">
+          <button type="button" class="preset-btn" data-target="monthly-pay" data-val="2500000">250만</button>
+          <button type="button" class="preset-btn" data-target="monthly-pay" data-val="3500000">350만</button>
+          <button type="button" class="preset-btn" data-target="monthly-pay" data-val="4500000">450만</button>
+          <button type="button" class="preset-btn" data-target="monthly-pay" data-val="6000000">600만</button>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label" for="annual-bonus">
+            <span>연간 상여금 합계</span>
+            <span class="field-hint num" id="annual-bonus-kor">0원</span>
+          </label>
+          <div class="input-wrap">
+            <input type="text" inputmode="numeric" autocomplete="off" id="annual-bonus" class="input-text has-unit num" value="0" />
+            <span class="input-unit">원</span>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label" for="unused-leave">
+            <span>미사용 연차 일수</span>
+          </label>
+          <div class="input-wrap">
+            <input type="number" id="unused-leave" class="input-text has-unit num" value="8" min="0" max="40" step="0.5" />
+            <span class="input-unit">일</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label"><span>퇴사 사유 (실업급여 적용 여부)</span></span>
+        <div class="segmented" role="radiogroup" aria-label="퇴사 사유">
+          <button type="button" class="seg-btn active" id="reason-involuntary">비자발적 (권고사직·계약만료)</button>
+          <button type="button" class="seg-btn" id="reason-voluntary">자발적 퇴사 (실업급여 제외)</button>
+        </div>
+      </div>
+
+      <div class="field" id="age-wrap">
+        <label class="field-label" for="age-group">
+          <span>퇴사 시점 만 나이 (실업급여 일수 기준)</span>
+        </label>
+        <select id="age-group" class="input-select">
+          <option value="under50" selected>만 50세 미만</option>
+          <option value="over50">만 50세 이상 또는 장애인</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Result Panel -->
+    <section class="panel panel-result" aria-live="polite" aria-label="계산 결과">
+      <div class="panel-title">
+        <span>퇴사 시 총 예상 수령액 (세전)</span>
+      </div>
+
+      <div class="result-summary" id="sev-result-box">
+        <div class="result-label">퇴직금 + 연차수당 + 실업급여 합계</div>
+        <div class="result-figure num" id="sev-total">0원</div>
+        <div class="result-sub" id="sev-sub">재직기간 3년 0일 기준 예상 합계입니다.</div>
+      </div>
+
+      <div class="bar-track" aria-hidden="true">
+        <div id="bar-sev" style="background: #0F766E; width: 50%;"></div>
+        <div id="bar-leave" style="background: #F59E0B; width: 10%;"></div>
+        <div id="bar-unemp" style="background: #2563EB; width: 40%;"></div>
+      </div>
+      <div class="bar-legend">
+        <span><i class="legend-dot" style="background: #0F766E;"></i>퇴직금 <strong class="num" id="pct-sev">0%</strong></span>
+        <span><i class="legend-dot" style="background: #F59E0B;"></i>연차수당 <strong class="num" id="pct-leave">0%</strong></span>
+        <span><i class="legend-dot" style="background: #2563EB;"></i>실업급여 <strong class="num" id="pct-unemp">0%</strong></span>
+      </div>
+
+      <table class="ledger">
+        <tbody>
+          <tr>
+            <th>1일 평균임금 (추정)</th>
+            <td id="o-daily">0원</td>
+          </tr>
+          <tr>
+            <th>예상 퇴직금 (세전)</th>
+            <td id="o-sev">0원</td>
+          </tr>
+          <tr>
+            <th>미사용 연차수당 (<span id="o-leave-days">8</span>일)</th>
+            <td id="o-leave">0원</td>
+          </tr>
+          <tr>
+            <th>예상 실업급여 (<span id="o-unemp-days">180</span>일 · 1일 <span id="o-unemp-daily">66,000원</span>)</th>
+            <td id="o-unemp">0원</td>
+          </tr>
+          <tr class="total-row">
+            <th>총 예상 수령액</th>
+            <td id="o-total" class="pos">0원</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="action-row">
+        <button type="button" class="btn-secondary" id="sev-copy">결과 복사</button>
+        <button type="button" class="btn-secondary" id="sev-reset">초기화</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Editorial SEO Guide & FAQ -->
+  <article class="guide-section">
+    <h2>퇴사 시 챙겨야 할 3가지 핵심 항목 계산 공식</h2>
+    <ul>
+      <li><strong>퇴직금:</strong> <code>1일 평균임금 × 30일 × (총 재직일수 ÷ 365)</code>. 계속근로기간이 365일 미만이면 법정 퇴직금이 발생하지 않습니다.</li>
+      <li><strong>미사용 연차수당:</strong> <code>1일 통상임금(월급 ÷ 209시간 × 8시간) × 미사용 연차 일수</code>.</li>
+      <li><strong>실업급여(구직급여):</strong> <code>1일 구직급여액(평균임금의 60%, 상·하한액 적용) × 소정급여일수(120~270일)</code>.</li>
+    </ul>
+
+    <h3>연령 및 고용보험 가입기간별 실업급여 소정급여일수</h3>
+    <table class="info-table">
+      <thead>
+        <tr>
+          <th>고용보험 가입기간</th>
+          <th>만 50세 미만</th>
+          <th>만 50세 이상 · 장애인</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1년 미만</td><td>120일</td><td>120일</td></tr>
+        <tr><td>1년 이상 ~ 3년 미만</td><td>150일</td><td>180일</td></tr>
+        <tr><td>3년 이상 ~ 5년 미만</td><td>180일</td><td>210일</td></tr>
+        <tr><td>5년 이상 ~ 10년 미만</td><td>210일</td><td>240일</td></tr>
+        <tr><td>10년 이상</td><td>240일</td><td>270일</td></tr>
+      </tbody>
+    </table>
+
+    <h3>자주 묻는 질문 (FAQ)</h3>
+    <div class="faq-list">
+      {faqItems.map((item) => (
+        <details class="faq-item">
+          <summary>{item.q}</summary>
+          <p>{item.a}</p>
+        </details>
+      ))}
+    </div>
+
+    <div class="disclaimer-box">
+      <strong>유의사항:</strong> 퇴직금과 연차수당은 세전 추정치이며, 실제 지급 시 퇴직소득세·근로소득세가 공제됩니다.
+      실업급여 상한액(1일 66,000원) 및 하한액(최저임금 80% × 8시간 기준)은 이직일 기준 법령에 따라 달라질 수 있으므로
+      정확한 수급 자격과 금액은 고용24(work24.go.kr)에서 확인하세요.
+    </div>
+  </article>
+
+  <RelatedTools currentPath="/severance-total/" />
+
+  <script>
+    import { bindWonInput, formatKoreanUnit, formatWon, parseWon, setWonInputValue } from '../lib/currency';
+
+    const startInput = document.getElementById('start-date') as HTMLInputElement;
+    const endInput = document.getElementById('end-date') as HTMLInputElement;
+    const payInput = document.getElementById('monthly-pay') as HTMLInputElement;
+    const payHint = document.getElementById('monthly-pay-kor') as HTMLElement;
+    const bonusInput = document.getElementById('annual-bonus') as HTMLInputElement;
+    const bonusHint = document.getElementById('annual-bonus-kor') as HTMLElement;
+    const leaveInput = document.getElementById('unused-leave') as HTMLInputElement;
+    const ageSelect = document.getElementById('age-group') as HTMLSelectElement;
+    const ageWrap = document.getElementById('age-wrap') as HTMLElement;
+    const btnInv = document.getElementById('reason-involuntary') as HTMLButtonElement;
+    const btnVol = document.getElementById('reason-voluntary') as HTMLButtonElement;
+
+    let isInvoluntary = true;
+    let lastSummary = '';
+
+    function getBenefitDays(days: number, over50: boolean): number {
+      if (days < 180) return 0;
+      const years = days / 365;
+      if (years < 1) return 120;
+      if (years < 3) return over50 ? 180 : 150;
+      if (years < 5) return over50 ? 210 : 180;
+      if (years < 10) return over50 ? 240 : 210;
+      return over50 ? 270 : 240;
+    }
+
+    function update() {
+      const start = new Date(startInput.value);
+      const end = new Date(endInput.value);
+      const rawDays = Math.floor((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+      const days = Number.isFinite(rawDays) && rawDays > 0 ? rawDays : 0;
+
+      const years = Math.floor(days / 365);
+      const remDays = days % 365;
+      (document.getElementById('tenure-badge') as HTMLElement).textContent =
+        days > 0 ? `재직 ${days.toLocaleString('ko-KR')}일 (${years}년 ${remDays}일)` : '날짜를 확인하세요';
+
+      const pay = parseWon(payInput.value);
+      const bonus = parseWon(bonusInput.value);
+      payHint.textContent = formatKoreanUnit(pay);
+      bonusHint.textContent = formatKoreanUnit(bonus);
+      const leaveDays = Math.max(0, Number(leaveInput.value) || 0);
+
+      const avgDaily = (pay * 3 + bonus * (3 / 12)) / 91;
+      const ordinaryDaily = (pay / 209) * 8;
+
+      const severance = days >= 365 ? Math.round(avgDaily * 30 * (days / 365)) : 0;
+      const leavePay = days > 0 ? Math.round(ordinaryDaily * leaveDays) : 0;
+
+      const over50 = ageSelect.value === 'over50';
+      const benefitDays = isInvoluntary ? getBenefitDays(days, over50) : 0;
+      const unempDaily = benefitDays > 0 ? Math.min(66_000, Math.max(64_192, Math.round(avgDaily * 0.6))) : 0;
+      const unempTotal = unempDaily * benefitDays;
+
+      const total = severance + leavePay + unempTotal;
+
+      const box = document.getElementById('sev-result-box') as HTMLElement;
+      box.classList.toggle('is-warning', days < 365);
+
+      (document.getElementById('sev-total') as HTMLElement).textContent = formatWon(total);
+      (document.getElementById('sev-sub') as HTMLElement).textContent =
+        days === 0
+          ? '입사일과 퇴사일을 올바르게 입력해주세요.'
+          : days < 365
+            ? '재직기간이 1년(365일) 미만이어서 법정 퇴직금은 제외되었습니다.'
+            : `재직 ${years}년 ${remDays}일 기준 예상 합계입니다.${!isInvoluntary ? ' (자발적 퇴사: 실업급여 제외)' : ''}`;
+
+      (document.getElementById('o-daily') as HTMLElement).textContent = formatWon(avgDaily);
+      (document.getElementById('o-sev') as HTMLElement).textContent = formatWon(severance);
+      (document.getElementById('o-leave-days') as HTMLElement).textContent = String(leaveDays);
+      (document.getElementById('o-leave') as HTMLElement).textContent = formatWon(leavePay);
+      (document.getElementById('o-unemp-days') as HTMLElement).textContent = String(benefitDays);
+      (document.getElementById('o-unemp-daily') as HTMLElement).textContent = formatWon(unempDaily);
+      (document.getElementById('o-unemp') as HTMLElement).textContent = formatWon(unempTotal);
+      (document.getElementById('o-total') as HTMLElement).textContent = formatWon(total);
+
+      const pSev = total > 0 ? Math.round((severance / total) * 100) : 0;
+      const pLeave = total > 0 ? Math.round((leavePay / total) * 100) : 0;
+      const pUnemp = total > 0 ? Math.max(0, 100 - pSev - pLeave) : 0;
+
+      (document.getElementById('bar-sev') as HTMLElement).style.width = `${pSev}%`;
+      (document.getElementById('bar-leave') as HTMLElement).style.width = `${pLeave}%`;
+      (document.getElementById('bar-unemp') as HTMLElement).style.width = `${pUnemp}%`;
+      (document.getElementById('pct-sev') as HTMLElement).textContent = `${pSev}%`;
+      (document.getElementById('pct-leave') as HTMLElement).textContent = `${pLeave}%`;
+      (document.getElementById('pct-unemp') as HTMLElement).textContent = `${pUnemp}%`;
+
+      lastSummary = `[얼마야] 퇴사 시 총 예상 수령액 (재직 ${days}일)\n- 퇴직금: ${formatWon(severance)}\n- 미사용 연차수당(${leaveDays}일): ${formatWon(leavePay)}\n- 실업급여(${benefitDays}일): ${formatWon(unempTotal)}\n- 총 합계: ${formatWon(total)}`;
+    }
+
+    bindWonInput(payInput, update, payHint);
+    bindWonInput(bonusInput, update, bonusHint);
+
+    btnInv.addEventListener('click', () => {
+      isInvoluntary = true;
+      btnInv.classList.add('active');
+      btnVol.classList.remove('active');
+      ageWrap.style.display = '';
+      update();
+    });
+
+    btnVol.addEventListener('click', () => {
+      isInvoluntary = false;
+      btnVol.classList.add('active');
+      btnInv.classList.remove('active');
+      ageWrap.style.display = 'none';
+      update();
+    });
+
+    [startInput, endInput, leaveInput, ageSelect].forEach((el) => el.addEventListener('input', update));
+    ageSelect.addEventListener('change', update);
+
+    document.querySelectorAll<HTMLButtonElement>('.preset-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const target = document.getElementById(btn.dataset.target || '') as HTMLInputElement | null;
+        if (target && btn.dataset.val) {
+          setWonInputValue(target, Number(btn.dataset.val));
+          update();
+        }
+      });
+    });
+
+    const btnCopy = document.getElementById('sev-copy') as HTMLButtonElement;
+    btnCopy.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(lastSummary);
+        btnCopy.textContent = '복사 완료!';
+        setTimeout(() => (btnCopy.textContent = '결과 복사'), 1500);
+      } catch {
+        btnCopy.textContent = '복사 실패';
+        setTimeout(() => (btnCopy.textContent = '결과 복사'), 1500);
+      }
+    });
+
+    const btnReset = document.getElementById('sev-reset') as HTMLButtonElement;
+    btnReset.addEventListener('click', () => {
+      startInput.value = '';
+      endInput.value = '';
+      setWonInputValue(payInput, 0);
+      setWonInputValue(bonusInput, 0);
+      leaveInput.value = '0';
+      ageSelect.value = 'under50';
+      isInvoluntary = true;
+      btnInv.classList.add('active');
+      btnVol.classList.remove('active');
+      ageWrap.style.display = '';
+      update();
+      btnReset.textContent = '초기화 완료';
+      setTimeout(() => (btnReset.textContent = '초기화'), 1200);
+    });
+
+    update();
+  </script>
+</BaseLayout>

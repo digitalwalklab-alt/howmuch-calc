@@ -1,0 +1,375 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+
+const faqItems = [
+  {
+    q: '연봉이 1,000만 원 올랐는데 왜 월 실수령액은 83만 원보다 적게 오르나요?',
+    a: '연봉이 오르면 건강보험료·고용보험료가 비례해서 늘어나고, 과세표준이 높아지면서 소득세 누진세율(15%→24% 등)이 적용되기 때문입니다. 보통 연봉 5,000~8,000만 원 구간에서는 인상분의 약 72~78% 정도가 실제 월 실수령액으로 체감됩니다.',
+  },
+  {
+    q: '비과세 식대 20만 원은 왜 중요한가요?',
+    a: '월 급여 중 식대(월 20만 원 한도)는 비과세 항목으로 4대보험과 소득세 계산에서 제외됩니다. 같은 연봉이라도 식대 비과세가 적용되면 월 실수령액이 약 2~5만 원가량 늘어납니다.',
+  },
+  {
+    q: '국민연금 상한액은 어떻게 적용되나요?',
+    a: '국민연금은 기준소득월액 상한(약 617만 원)이 있어, 월 과세 급여가 그 이상으로 높아져도 국민연금 본인 부담금은 월 약 277,650원 선에서 더 이상 늘어나지 않습니다.',
+  },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: '이직 연봉 협상 월 실수령액 비교기',
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: 'All',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  },
+];
+---
+
+<BaseLayout
+  title="이직 연봉 협상 월 실수령액 비교기 (4대보험·세후 월급 차이)"
+  description="현재 연봉과 이직 제안 연봉을 원 단위로 나란히 비교해 4대보험과 소득세를 제외한 진짜 월 실수령액 증가분과 연 세후 차이를 즉시 계산합니다."
+  canonicalPath="/salary-compare/"
+  breadcrumbCategory="퇴사 · 급여"
+  jsonLd={jsonLd}
+>
+  <div class="calc-header">
+    <nav class="breadcrumb" aria-label="경로">
+      <a href="/">얼마야</a>
+      <span>/</span>
+      <span>퇴사 · 급여</span>
+    </nav>
+    <h1>이직 연봉 협상 월 실수령액 비교기</h1>
+    <p class="page-lead">
+      세전 연봉 인상률만 보지 말고, 4대보험과 소득세 구간 변화를 반영한 진짜 월 실수령액 차이를 원 단위로 비교해보세요.
+    </p>
+  </div>
+
+  <div class="calc-grid">
+    <section class="panel" aria-label="입력 조건">
+      <div class="panel-title">
+        <span>현재 연봉 vs 이직 제안 연봉</span>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="cur-sal">
+          <span>현재 연봉 (세전)</span>
+          <span class="field-hint num" id="cur-sal-kor">4,500만원</span>
+        </label>
+        <div class="input-wrap">
+          <input type="text" inputmode="numeric" autocomplete="off" id="cur-sal" class="input-text has-unit num" value="45,000,000" />
+          <span class="input-unit">원</span>
+        </div>
+        <div class="preset-row">
+          <button type="button" class="preset-btn" data-target="cur-sal" data-val="35000000">3,500만</button>
+          <button type="button" class="preset-btn" data-target="cur-sal" data-val="45000000">4,500만</button>
+          <button type="button" class="preset-btn" data-target="cur-sal" data-val="60000000">6,000만</button>
+          <button type="button" class="preset-btn" data-target="cur-sal" data-val="80000000">8,000만</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="new-sal">
+          <span>이직 제안 연봉 (세전)</span>
+          <span class="field-hint num" id="new-sal-kor">5,500만원</span>
+        </label>
+        <div class="input-wrap">
+          <input type="text" inputmode="numeric" autocomplete="off" id="new-sal" class="input-text has-unit num" value="55,000,000" />
+          <span class="input-unit">원</span>
+        </div>
+        <div class="preset-row">
+          <button type="button" class="preset-btn" id="bump-10">+10% 인상</button>
+          <button type="button" class="preset-btn" id="bump-15">+15% 인상</button>
+          <button type="button" class="preset-btn" id="bump-20">+20% 인상</button>
+          <button type="button" class="preset-btn" id="bump-30">+30% 인상</button>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label" for="tax-free">
+            <span>월 비과세액 (식대 등)</span>
+            <span class="field-hint num" id="tax-free-kor">20만원</span>
+          </label>
+          <div class="input-wrap">
+            <input type="text" inputmode="numeric" autocomplete="off" id="tax-free" class="input-text has-unit num" value="200,000" />
+            <span class="input-unit">원</span>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label" for="sal-dep">
+            <span>부양가족 수 (본인 포함)</span>
+          </label>
+          <div class="input-wrap">
+            <input type="number" id="sal-dep" class="input-text has-unit num" value="1" min="1" max="10" step="1" />
+            <span class="input-unit">명</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel panel-result" aria-live="polite" aria-label="비교 결과">
+      <div class="panel-title">
+        <span>이직 시 실수령액 변화</span>
+      </div>
+
+      <div class="result-summary" id="sal-box">
+        <div class="result-label" id="sal-label">월 실수령액 증가분</div>
+        <div class="result-figure num" id="sal-diff-month">+ 0원</div>
+        <div class="result-sub" id="sal-sub">연간 세후 실수령액이 +0원 늘어납니다.</div>
+      </div>
+
+      <table class="ledger">
+        <thead>
+          <tr style="border-bottom: 2px solid var(--border);">
+            <th>월 기준 항목</th>
+            <th style="text-align: right;">현재</th>
+            <th style="text-align: right;">이직 제안</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>월 세전 급여</th>
+            <td id="c-gross">0원</td>
+            <td id="n-gross">0원</td>
+          </tr>
+          <tr>
+            <th>국민연금 (4.5%)</th>
+            <td id="c-np">0원</td>
+            <td id="n-np">0원</td>
+          </tr>
+          <tr>
+            <th>건강·장기요양보험</th>
+            <td id="c-hi">0원</td>
+            <td id="n-hi">0원</td>
+          </tr>
+          <tr>
+            <th>고용보험 (0.9%)</th>
+            <td id="c-ei">0원</td>
+            <td id="n-ei">0원</td>
+          </tr>
+          <tr>
+            <th>소득세·지방소득세</th>
+            <td id="c-tax">0원</td>
+            <td id="n-tax">0원</td>
+          </tr>
+          <tr class="total-row">
+            <th>예상 월 실수령액</th>
+            <td id="c-net">0원</td>
+            <td id="n-net" class="pos">0원</td>
+          </tr>
+          <tr>
+            <th>실효 공제율</th>
+            <td id="c-rate">0%</td>
+            <td id="n-rate">0%</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="action-row">
+        <button type="button" class="btn-secondary" id="sal-copy">결과 복사</button>
+        <button type="button" class="btn-secondary" id="sal-reset">초기화</button>
+      </div>
+    </section>
+  </div>
+
+  <article class="guide-section">
+    <h2>이직 연봉 협상 시 실수령액 체크 포인트</h2>
+    <ul>
+      <li><strong>퇴직금 별도 여부:</strong> 제안받은 연봉에 퇴직금이 포함(연봉 ÷ 13)인지 별도(연봉 ÷ 12)인지 반드시 확인해야 합니다. 퇴직금 포함이라면 실질 연봉은 약 7.7% 낮아집니다.</li>
+      <li><strong>성과급·복지 포인트:</strong> 기본급 외 확정 상여금이나 식대 지원, 복지 포인트까지 합산해 총보상(Total Compensation) 기준으로 비교하세요.</li>
+      <li><strong>4대보험 요율 기준:</strong> 국민연금 4.5%(월 기준소득 상한 적용), 건강보험 3.545%, 장기요양보험(건보료의 12.95%), 고용보험 0.9%를 반영했습니다.</li>
+    </ul>
+
+    <h3>자주 묻는 질문 (FAQ)</h3>
+    <div class="faq-list">
+      {faqItems.map((item) => (
+        <details class="faq-item">
+          <summary>{item.q}</summary>
+          <p>{item.a}</p>
+        </details>
+      ))}
+    </div>
+
+    <div class="disclaimer-box">
+      <strong>유의사항:</strong> 본 계산기는 퇴직금 별도(연봉 ÷ 12) 기준의 추정치이며, 실제 급여명세서의 간이세액표 적용 비율(80%/100%/120%) 및 회사별 비과세 수당 구성에 따라 소폭 차이가 날 수 있습니다.
+    </div>
+  </article>
+
+  <RelatedTools currentPath="/salary-compare/" />
+
+  <script>
+    import { bindWonInput, formatKoreanUnit, formatWon, parseWon, setWonInputValue } from '../lib/currency';
+
+    function calcEarnedDeduction(salary: number): number {
+      if (salary <= 5_000_000) return salary * 0.7;
+      if (salary <= 15_000_000) return 3_500_000 + (salary - 5_000_000) * 0.4;
+      if (salary <= 45_000_000) return 7_500_000 + (salary - 15_000_000) * 0.15;
+      if (salary <= 100_000_000) return 12_000_000 + (salary - 45_000_000) * 0.05;
+      return Math.min(20_000_000, 14_750_000 + (salary - 100_000_000) * 0.02);
+    }
+
+    function calcAnnualIncomeTax(base: number): number {
+      if (base <= 0) return 0;
+      if (base <= 14_000_000) return base * 0.06;
+      if (base <= 50_000_000) return base * 0.15 - 1_260_000;
+      if (base <= 88_000_000) return base * 0.24 - 5_760_000;
+      if (base <= 150_000_000) return base * 0.35 - 15_440_000;
+      if (base <= 300_000_000) return base * 0.38 - 19_940_000;
+      if (base <= 500_000_000) return base * 0.40 - 25_940_000;
+      if (base <= 1_000_000_000) return base * 0.42 - 35_940_000;
+      return base * 0.45 - 65_940_000;
+    }
+
+    function calcMonthlyNet(annualWon: number, taxFreeMonthWon: number, dep: number) {
+      if (annualWon <= 0) {
+        return { gross: 0, np: 0, hi: 0, ei: 0, tax: 0, net: 0, rate: 0 };
+      }
+      const gross = annualWon / 12;
+      const taxableMonth = Math.max(0, gross - taxFreeMonthWon);
+
+      const npBase = Math.min(6_170_000, taxableMonth);
+      const np = Math.round(npBase * 0.045);
+      const health = Math.round(taxableMonth * 0.03545);
+      const care = Math.round(health * 0.1295);
+      const hi = health + care;
+      const ei = Math.round(taxableMonth * 0.009);
+
+      const annualTaxable = taxableMonth * 12;
+      const earnedInc = Math.max(0, annualTaxable - calcEarnedDeduction(annualTaxable));
+      const annualIns = (np + hi + ei) * 12;
+      const taxBase = Math.max(0, earnedInc - dep * 1_500_000 - annualIns);
+      const annualTax = Math.max(0, calcAnnualIncomeTax(taxBase) - 550_000);
+      const tax = Math.round((annualTax * 1.1) / 12);
+
+      const totalDeduct = np + hi + ei + tax;
+      const net = Math.max(0, Math.round(gross - totalDeduct));
+      const rate = gross > 0 ? (totalDeduct / gross) * 100 : 0;
+
+      return { gross, np, hi, ei, tax, net, rate };
+    }
+
+    const curIn = document.getElementById('cur-sal') as HTMLInputElement;
+    const curHint = document.getElementById('cur-sal-kor') as HTMLElement;
+    const newIn = document.getElementById('new-sal') as HTMLInputElement;
+    const newHint = document.getElementById('new-sal-kor') as HTMLElement;
+    const tfIn = document.getElementById('tax-free') as HTMLInputElement;
+    const tfHint = document.getElementById('tax-free-kor') as HTMLElement;
+    const depIn = document.getElementById('sal-dep') as HTMLInputElement;
+
+    let lastSummary = '';
+
+    function update() {
+      const curWon = parseWon(curIn.value);
+      const newWon = parseWon(newIn.value);
+      const tfWon = parseWon(tfIn.value);
+      const dep = Math.max(1, Math.floor(Number(depIn.value) || 1));
+
+      curHint.textContent = formatKoreanUnit(curWon);
+      newHint.textContent = formatKoreanUnit(newWon);
+      tfHint.textContent = formatKoreanUnit(tfWon);
+
+      const c = calcMonthlyNet(curWon, tfWon, dep);
+      const n = calcMonthlyNet(newWon, tfWon, dep);
+
+      const diffMonth = n.net - c.net;
+      const diffYear = diffMonth * 12;
+      const pctBump = curWon > 0 ? ((newWon - curWon) / curWon) * 100 : 0;
+
+      const box = document.getElementById('sal-box') as HTMLElement;
+      const label = document.getElementById('sal-label') as HTMLElement;
+      const fig = document.getElementById('sal-diff-month') as HTMLElement;
+      const sub = document.getElementById('sal-sub') as HTMLElement;
+
+      box.classList.remove('is-danger');
+      if (diffMonth >= 0) {
+        label.textContent = `월 실수령액 증가분 (세전 ${pctBump >= 0 ? '+' : ''}${pctBump.toFixed(1)}%)`;
+        fig.textContent = `+ ${formatWon(diffMonth)}`;
+        sub.textContent = `연간 세후 실수령액이 +${formatWon(diffYear)} 늘어납니다.`;
+      } else {
+        box.classList.add('is-danger');
+        label.textContent = `월 실수령액 감소분 (세전 ${pctBump.toFixed(1)}%)`;
+        fig.textContent = `- ${formatWon(Math.abs(diffMonth))}`;
+        sub.textContent = `연간 세후 실수령액이 ${formatWon(Math.abs(diffYear))} 줄어듭니다.`;
+      }
+
+      (document.getElementById('c-gross') as HTMLElement).textContent = formatWon(c.gross);
+      (document.getElementById('n-gross') as HTMLElement).textContent = formatWon(n.gross);
+      (document.getElementById('c-np') as HTMLElement).textContent = formatWon(c.np);
+      (document.getElementById('n-np') as HTMLElement).textContent = formatWon(n.np);
+      (document.getElementById('c-hi') as HTMLElement).textContent = formatWon(c.hi);
+      (document.getElementById('n-hi') as HTMLElement).textContent = formatWon(n.hi);
+      (document.getElementById('c-ei') as HTMLElement).textContent = formatWon(c.ei);
+      (document.getElementById('n-ei') as HTMLElement).textContent = formatWon(n.ei);
+      (document.getElementById('c-tax') as HTMLElement).textContent = formatWon(c.tax);
+      (document.getElementById('n-tax') as HTMLElement).textContent = formatWon(n.tax);
+      (document.getElementById('c-net') as HTMLElement).textContent = formatWon(c.net);
+      (document.getElementById('n-net') as HTMLElement).textContent = formatWon(n.net);
+      (document.getElementById('c-rate') as HTMLElement).textContent = `${c.rate.toFixed(1)}%`;
+      (document.getElementById('n-rate') as HTMLElement).textContent = `${n.rate.toFixed(1)}%`;
+
+      lastSummary = `[얼마야] 이직 연봉 실수령 비교\n- 현재 연봉 ${formatWon(curWon)} → 월 실수령 ${formatWon(c.net)}\n- 제안 연봉 ${formatWon(newWon)} → 월 실수령 ${formatWon(n.net)}\n- 월 실수령 차이: ${diffMonth >= 0 ? '+' : '-'}${formatWon(Math.abs(diffMonth))} (연 ${formatWon(Math.abs(diffYear))})`;
+    }
+
+    bindWonInput(curIn, update, curHint);
+    bindWonInput(newIn, update, newHint);
+    bindWonInput(tfIn, update, tfHint);
+    depIn.addEventListener('input', update);
+
+    document.querySelectorAll<HTMLButtonElement>('.preset-btn[data-target]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const target = document.getElementById(btn.dataset.target || '') as HTMLInputElement | null;
+        if (target && btn.dataset.val) {
+          setWonInputValue(target, Number(btn.dataset.val));
+          update();
+        }
+      });
+    });
+
+    const bumpMap: Record<string, number> = { 'bump-10': 1.1, 'bump-15': 1.15, 'bump-20': 1.2, 'bump-30': 1.3 };
+    Object.entries(bumpMap).forEach(([id, mult]) => {
+      document.getElementById(id)?.addEventListener('click', () => {
+        const cur = parseWon(curIn.value);
+        setWonInputValue(newIn, Math.round(cur * mult));
+        update();
+      });
+    });
+
+    const btnCopy = document.getElementById('sal-copy') as HTMLButtonElement;
+    btnCopy.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(lastSummary);
+        btnCopy.textContent = '복사 완료!';
+        setTimeout(() => (btnCopy.textContent = '결과 복사'), 1500);
+      } catch {
+        btnCopy.textContent = '복사 실패';
+        setTimeout(() => (btnCopy.textContent = '결과 복사'), 1500);
+      }
+    });
+
+    const btnReset = document.getElementById('sal-reset') as HTMLButtonElement;
+    btnReset.addEventListener('click', () => {
+      setWonInputValue(curIn, 0);
+      setWonInputValue(newIn, 0);
+      setWonInputValue(tfIn, 0);
+      depIn.value = '1';
+      update();
+      btnReset.textContent = '초기화 완료';
+      setTimeout(() => (btnReset.textContent = '초기화'), 1200);
+    });
+
+    update();
+  </script>
+</BaseLayout>
