@@ -20,7 +20,7 @@ const jsonLd = {
   breadcrumbCategory="실전 가이드"
   jsonLd={jsonLd}
 >
-  <article class="guide-section" style="margin-top: 0; padding-top: 0; border-top: none;">
+  <article class="guide-section guide-article">
     <nav class="breadcrumb" aria-label="경로">
       <a href="/">얼마야</a>
       <span>/</span>
@@ -63,12 +63,12 @@ const jsonLd = {
       <li><strong>이직이 확정된 퇴사라면:</strong> 제안받은 연봉의 세후 월급 차이를 <a href="/salary-compare/" style="color: var(--brand-ink); text-decoration: underline;">이직 연봉 실수령 비교기</a>로 미리 확인해 협상 근거로 활용하세요.</li>
     </ul>
 
-    <div class="action-row" style="max-width: 360px; margin-top: 28px;">
-      <a href="/severance-total/" class="tool-cta" style="width: 100%; justify-content: center;">
+    <div style="margin-top: 28px;">
+      <a href="/severance-total/" class="tool-cta">
         내 퇴사 총수령액 지금 계산하기 →
       </a>
     </div>
   </article>
 
-  <RelatedTools currentPath="/severance-total/" />
+  <RelatedTools currentPath="/severance-total/" showGuide={false} />
 </BaseLayout>

@@ -137,7 +137,10 @@ const navItems = [
           <nav class="site-nav" id="site-nav" aria-label="주요 계산기">
             {navItems.map((item) => {
               const normHref = item.href.replace(/\/$/, '') || '/';
-              const isActive = currentPath === normHref;
+              const isActive =
+                normHref === '/guide'
+                  ? currentPath === '/guide' || currentPath.startsWith('/guide/')
+                  : currentPath === normHref;
               return (
                 <a
                   href={item.href}

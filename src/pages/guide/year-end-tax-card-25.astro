@@ -20,7 +20,7 @@ const jsonLd = {
   breadcrumbCategory="실전 가이드"
   jsonLd={jsonLd}
 >
-  <article class="guide-section" style="margin-top: 0; padding-top: 0; border-top: none;">
+  <article class="guide-section guide-article">
     <nav class="breadcrumb" aria-label="경로">
       <a href="/">얼마야</a>
       <span>/</span>
@@ -66,19 +66,21 @@ const jsonLd = {
       카드 소득공제는 기본 한도(300만 원, 7천만 원 초과 시 250만 원)가 정해져 있어, 연말에 아무리
       더 써도 세금이 더 줄지 않는 지점이 옵니다. 이때 가장 확실한 절세 수단이 <strong>연금저축(최대 600만) + IRP(합산 최대 900만)</strong>입니다.
     </p>
-    <table class="info-table">
-      <thead>
-        <tr>
-          <th>총급여 기준</th>
-          <th>세액공제율 (지방세 포함)</th>
-          <th>900만 원 납입 시 환급액</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>5,500만 원 이하</td><td>16.5%</td><td>최대 1,485,000원</td></tr>
-        <tr><td>5,500만 원 초과</td><td>13.2%</td><td>최대 1,188,000원</td></tr>
-      </tbody>
-    </table>
+    <div class="table-scroll">
+      <table class="info-table">
+        <thead>
+          <tr>
+            <th>총급여 기준</th>
+            <th>세액공제율 (지방세 포함)</th>
+            <th>900만 원 납입 시 환급액</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>5,500만 원 이하</td><td>16.5%</td><td>최대 1,485,000원</td></tr>
+          <tr><td>5,500만 원 초과</td><td>13.2%</td><td>최대 1,188,000원</td></tr>
+        </tbody>
+      </table>
+    </div>
 
     <h2>4. 무주택 직장인이라면 월세 세액공제 필수 확인</h2>
     <p>
@@ -86,12 +88,12 @@ const jsonLd = {
       최대 1,000만 원에 대해 <strong>15~17%(지방세 포함 16.5~18.7%)</strong>를 직접 세액공제 받을 수 있습니다.
     </p>
 
-    <div class="action-row" style="max-width: 360px; margin-top: 28px;">
-      <a href="/year-end-tax/" class="tool-cta" style="width: 100%; justify-content: center;">
+    <div style="margin-top: 28px;">
+      <a href="/year-end-tax/" class="tool-cta">
         내 연말정산 환급액 지금 계산하기 →
       </a>
     </div>
   </article>
 
-  <RelatedTools currentPath="/year-end-tax/" />
+  <RelatedTools currentPath="/year-end-tax/" showGuide={false} />
 </BaseLayout>

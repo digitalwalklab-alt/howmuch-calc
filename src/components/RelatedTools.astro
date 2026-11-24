@@ -14,9 +14,10 @@ interface GuideItem {
 
 interface Props {
   currentPath: string;
+  showGuide?: boolean;
 }
 
-const { currentPath } = Astro.props;
+const { currentPath, showGuide = true } = Astro.props;
 
 const allTools: ToolItem[] = [
   {
@@ -97,7 +98,7 @@ const related = allTools.filter((t) => t.href.replace(/\/$/, '') !== normCurrent
 const matchedGuide = guides.find((g) => g.forPaths.includes(normCurrent));
 ---
 
-{matchedGuide && (
+{showGuide && matchedGuide && (
   <section class="related-section" style="margin-top: 36px; padding-top: 24px;" aria-label="관련 실전 가이드">
     <a href={matchedGuide.href} class="related-card" style="background: var(--surface-tint); border-color: #cce7e4;">
       <span class="related-cat">관련 실전 가이드</span>

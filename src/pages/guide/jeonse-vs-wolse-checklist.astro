@@ -20,7 +20,7 @@ const jsonLd = {
   breadcrumbCategory="실전 가이드"
   jsonLd={jsonLd}
 >
-  <article class="guide-section" style="margin-top: 0; padding-top: 0; border-top: none;">
+  <article class="guide-section guide-article">
     <nav class="breadcrumb" aria-label="경로">
       <a href="/">얼마야</a>
       <span>/</span>
@@ -63,12 +63,12 @@ const jsonLd = {
       <li>전세와 월세의 실질 비용 차이가 월 5~10만 원 이내로 비슷하다면, 전세보증보험료·중개보수·보증금 반환 리스크까지 고려해 선택하는 것이 현명합니다.</li>
     </ul>
 
-    <div class="action-row" style="max-width: 360px; margin-top: 28px;">
-      <a href="/jeonse-vs-wolse/" class="tool-cta" style="width: 100%; justify-content: center;">
+    <div style="margin-top: 28px;">
+      <a href="/jeonse-vs-wolse/" class="tool-cta">
         전세 vs 월세 손익 지금 비교하기 →
       </a>
     </div>
   </article>
 
-  <RelatedTools currentPath="/jeonse-vs-wolse/" />
+  <RelatedTools currentPath="/jeonse-vs-wolse/" showGuide={false} />
 </BaseLayout>

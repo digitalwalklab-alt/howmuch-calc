@@ -20,7 +20,7 @@ const jsonLd = {
   breadcrumbCategory="실전 가이드"
   jsonLd={jsonLd}
 >
-  <article class="guide-section" style="margin-top: 0; padding-top: 0; border-top: none;">
+  <article class="guide-section guide-article">
     <nav class="breadcrumb" aria-label="경로">
       <a href="/">얼마야</a>
       <span>/</span>
@@ -65,12 +65,12 @@ const jsonLd = {
       <li><strong>애드센스·스마트스토어:</strong> 원천징수 없이 전액 입금되므로, 5월 신고 때 한꺼번에 납부할 세금을 매달 수익의 10~15% 정도 따로 모아두는 것이 안전합니다.</li>
     </ul>
 
-    <div class="action-row" style="max-width: 360px; margin-top: 28px;">
-      <a href="/njob-tax/" class="tool-cta" style="width: 100%; justify-content: center;">
+    <div style="margin-top: 28px;">
+      <a href="/njob-tax/" class="tool-cta">
         내 N잡 합산 종소세 계산하기 →
       </a>
     </div>
   </article>
 
-  <RelatedTools currentPath="/njob-tax/" />
+  <RelatedTools currentPath="/njob-tax/" showGuide={false} />
 </BaseLayout>
