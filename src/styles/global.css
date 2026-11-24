@@ -260,7 +260,6 @@ h3 {
   margin: 12px 0 0;
   font-size: 1.02rem;
   color: var(--ink-secondary);
-  max-width: 66ch;
 }
 
 /* Home Hero & Tool Directory */
@@ -338,7 +337,6 @@ h3 {
   margin: 0;
   color: var(--ink-secondary);
   font-size: 0.95rem;
-  max-width: 60ch;
 }
 
 .tool-tags {
