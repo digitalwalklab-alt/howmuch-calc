@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: '퇴사 전 반드시 챙겨야 할 퇴직금·미사용 연차수당·실업급여 핵심 체크리스트',
+  datePublished: '2026-11-24',
+  dateModified: '2026-11-24',
+  author: { '@type': 'Organization', name: '얼마야' },
+  publisher: { '@type': 'Organization', name: '얼마야' },
+};
+---
+
+<BaseLayout
+  title="퇴사 전 반드시 챙겨야 할 퇴직금·미사용 연차수당·실업급여 체크리스트"
+  description="퇴직금 평균임금 높이는 퇴사 시점, 미사용 연차수당 정산 기준, 자발적 퇴사에도 실업급여가 인정되는 예외 사유까지 퇴사 전 필수 체크리스트를 정리합니다."
+  canonicalPath="/guide/severance-unemployment-tips/"
+  breadcrumbCategory="실전 가이드"
+  jsonLd={jsonLd}
+>
+  <article class="guide-section" style="margin-top: 0; padding-top: 0; border-top: none;">
+    <nav class="breadcrumb" aria-label="경로">
+      <a href="/">얼마야</a>
+      <span>/</span>
+      <a href="/guide/">가이드</a>
+      <span>/</span>
+      <span>퇴사 · 급여</span>
+    </nav>
+
+    <h1>퇴사 전 반드시 챙겨야 할 퇴직금·미사용 연차수당·실업급여 체크리스트</h1>
+    <p class="page-lead">
+      퇴사 날짜 하루 차이로 퇴직금과 연차수당이 수십~수백만 원 달라질 수 있습니다.
+      사직서를 내기 전에 반드시 확인해야 할 3가지 정산 포인트를 모았습니다.
+    </p>
+
+    <div class="disclaimer-box" style="background: var(--surface-tint); border-color: #cce7e4; color: var(--brand-ink); margin: 24px 0;">
+      <strong>퇴직금 + 연차수당 + 실업급여를 한 번에 합산해 보려면?</strong><br />
+      <a href="/severance-total/" style="display: inline-block; margin-top: 8px; font-weight: 800; text-decoration: underline; text-underline-offset: 3px;">
+        → 퇴사 시 총 수령액 통합 계산기 바로가기
+      </a>
+    </div>
+
+    <h2>1. 퇴직금: 퇴직 직전 3개월 평균임금이 핵심</h2>
+    <p>
+      퇴직금은 <strong>퇴사 직전 3개월간의 평균임금</strong>을 기준으로 계산됩니다.
+      만약 직전 3개월에 연장·야간근무 수당이나 정기 상여금이 포함되면 1일 평균임금이 올라가
+      퇴직금 총액이 커집니다. 반대로 무급휴가나 병가가 끼어 있었다면 통상임금과 비교해 더 높은
+      금액이 적용되는지 꼭 확인하세요.
+    </p>
+
+    <h2>2. 미사용 연차수당: '퇴사일'에 따라 잔여 일수가 달라진다</h2>
+    <p>
+      입사일 기준으로 만 1년·2년·3년 등 <strong>근속 연차가 채워진 다음 날</strong> 새로운 연차가
+      발생합니다. 예를 들어 입사 기념일을 며칠 앞두고 퇴사하면 새로 발생할 연차 15일 이상을
+      받지 못할 수 있으므로, 가능하면 입사 기념일 이후로 퇴사일을 조율하는 것이 유리합니다.
+    </p>
+
+    <h2>3. 실업급여 & 이직 연봉 협상 체크</h2>
+    <ul>
+      <li><strong>비자발적 퇴사(권고사직·계약만료):</strong> 고용보험 가입기간과 만 나이(50세 기준)에 따라 120일~270일간 구직급여를 받을 수 있습니다.</li>
+      <li><strong>이직이 확정된 퇴사라면:</strong> 제안받은 연봉의 세후 월급 차이를 <a href="/salary-compare/" style="color: var(--brand-ink); text-decoration: underline;">이직 연봉 실수령 비교기</a>로 미리 확인해 협상 근거로 활용하세요.</li>
+    </ul>
+
+    <div class="action-row" style="max-width: 360px; margin-top: 28px;">
+      <a href="/severance-total/" class="tool-cta" style="width: 100%; justify-content: center;">
+        내 퇴사 총수령액 지금 계산하기 →
+      </a>
+    </div>
+  </article>
+
+  <RelatedTools currentPath="/severance-total/" />
+</BaseLayout>

@@ -105,3 +105,45 @@ export function bindWonInput(
     onChange();
   });
 }
+
+const SITE_ORIGIN = 'https://howmuch.jokerx04.com';
+
+export async function copySummaryWithUrl(
+  summary: string,
+  path: string,
+  btn: HTMLButtonElement
+): Promise<void> {
+  const url = `${SITE_ORIGIN}${path}`;
+  const fullText = `${summary}\n👉 직접 계산하기: ${url}`;
+  try {
+    await navigator.clipboard.writeText(fullText);
+    btn.textContent = '복사 완료!';
+  } catch {
+    btn.textContent = '복사 실패';
+  }
+  setTimeout(() => (btn.textContent = '결과 복사'), 1500);
+}
+
+export async function shareCalculator(
+  title: string,
+  summary: string,
+  path: string,
+  btn: HTMLButtonElement
+): Promise<void> {
+  const url = `${SITE_ORIGIN}${path}`;
+  if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
+    try {
+      await navigator.share({ title, text: summary, url });
+      return;
+    } catch {
+      // User cancelled or share failed; fall through to clipboard copy
+    }
+  }
+  try {
+    await navigator.clipboard.writeText(url);
+    btn.textContent = '링크 복사됨!';
+  } catch {
+    btn.textContent = '공유 실패';
+  }
+  setTimeout(() => (btn.textContent = '링크 공유'), 1500);
+}

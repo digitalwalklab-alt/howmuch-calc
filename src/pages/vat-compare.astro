@@ -154,6 +154,7 @@ const jsonLd = [
 
       <div class="action-row">
         <button type="button" class="btn-secondary" id="vat-copy">결과 복사</button>
+        <button type="button" class="btn-secondary" id="vat-share">링크 공유</button>
         <button type="button" class="btn-secondary" id="vat-reset">초기화</button>
       </div>
     </section>
@@ -184,7 +185,7 @@ const jsonLd = [
   <RelatedTools currentPath="/vat-compare/" />
 
   <script>
-    import { bindWonInput, formatKoreanUnit, formatWon, parseWon, setWonInputValue } from '../lib/currency';
+    import { bindWonInput, copySummaryWithUrl, formatKoreanUnit, formatWon, parseWon, setWonInputValue, shareCalculator } from '../lib/currency';
 
     const salesIn = document.getElementById('vat-sales') as HTMLInputElement;
     const salesHint = document.getElementById('vat-sales-kor') as HTMLElement;
@@ -284,16 +285,12 @@ const jsonLd = [
     });
 
     const btnCopy = document.getElementById('vat-copy') as HTMLButtonElement;
-    btnCopy.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(lastSummary);
-        btnCopy.textContent = '복사 완료!';
-        setTimeout(() => (btnCopy.textContent = '결과 복사'), 1500);
-      } catch {
-        btnCopy.textContent = '복사 실패';
-        setTimeout(() => (btnCopy.textContent = '결과 복사'), 1500);
-      }
-    });
+    btnCopy.addEventListener('click', () => copySummaryWithUrl(lastSummary, '/vat-compare/', btnCopy));
+
+    const btnShare = document.getElementById('vat-share') as HTMLButtonElement;
+    btnShare.addEventListener('click', () =>
+      shareCalculator('얼마야 — 간이과세자 vs 일반과세자 부가세 비교기', lastSummary, '/vat-compare/', btnShare)
+    );
 
     const btnReset = document.getElementById('vat-reset') as HTMLButtonElement;
     btnReset.addEventListener('click', () => {

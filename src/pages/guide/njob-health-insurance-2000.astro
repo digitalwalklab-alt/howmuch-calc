@@ -1,0 +1,76 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: '직장인 부업(N잡) 건강보험료 2,000만 원 기준과 5월 종소세 절세 전략',
+  datePublished: '2026-11-24',
+  dateModified: '2026-11-24',
+  author: { '@type': 'Organization', name: '얼마야' },
+  publisher: { '@type': 'Organization', name: '얼마야' },
+};
+---
+
+<BaseLayout
+  title="직장인 부업(N잡) 건강보험료 2,000만 원 기준과 5월 종소세 절세 전략"
+  description="블로그 애드센스·스마트스토어·3.3% 프리랜서 부업 시 매출과 소득금액 차이, 건강보험료 추가 부과 기준(2,000만 원), 5월 합산 종합소득세 절세 핵심을 정리합니다."
+  canonicalPath="/guide/njob-health-insurance-2000/"
+  breadcrumbCategory="실전 가이드"
+  jsonLd={jsonLd}
+>
+  <article class="guide-section" style="margin-top: 0; padding-top: 0; border-top: none;">
+    <nav class="breadcrumb" aria-label="경로">
+      <a href="/">얼마야</a>
+      <span>/</span>
+      <a href="/guide/">가이드</a>
+      <span>/</span>
+      <span>N잡 · 세무</span>
+    </nav>
+
+    <h1>직장인 부업(N잡) 건강보험료 2,000만 원 기준과 5월 종소세 절세 전략</h1>
+    <p class="page-lead">
+      직장인이 블로그·유튜브·스마트스토어·프리랜서 부업을 시작할 때 가장 많이 걱정하는
+      <strong>5월 종합소득세 추가 납부</strong>와 <strong>건강보험료 추가 부과(2,000만 원 기준)</strong>를 정확히 짚어드립니다.
+    </p>
+
+    <div class="disclaimer-box" style="background: var(--surface-tint); border-color: #cce7e4; color: var(--brand-ink); margin: 24px 0;">
+      <strong>본업 연봉 + 부업 수익 합산 세금이 궁금하다면?</strong><br />
+      <a href="/njob-tax/" style="display: inline-block; margin-top: 8px; font-weight: 800; text-decoration: underline; text-underline-offset: 3px;">
+        → 직장인 + 부업(N잡) 합산 종소세 시뮬레이터 바로가기
+      </a>
+    </div>
+
+    <h2>1. 건보료 2,000만 원은 '매출'이 아니라 '소득금액' 기준</h2>
+    <p>
+      많은 N잡러가 "부업 매출이 2,000만 원 넘으면 건보료 폭탄을 맞는다"고 오해합니다.
+      하지만 실제 기준은 매출에서 <strong>필요경비를 뺀 '소득금액'이 연 2,000만 원을 초과할 때</strong>입니다.
+    </p>
+    <ul>
+      <li><strong>블로그·콘텐츠·IT (단순경비율 64.1% 가정):</strong> 연 매출이 약 <strong>5,570만 원</strong>을 넘어야 소득금액이 2,000만 원을 초과합니다.</li>
+      <li><strong>스마트스토어·도소매 (단순경비율 86.0% 가정):</strong> 연 매출이 1억 원을 넘어도 경비 제외 소득금액이 2,000만 원 이하라면 추가 건보료가 없습니다.</li>
+    </ul>
+
+    <h2>2. 본업 연봉이 높을수록 부업 세율이 높아지는 이유</h2>
+    <p>
+      종합소득세는 1년간의 근로소득금액과 부업 사업소득금액을 <strong>합산해 누진세율(6%~45%)</strong>을 매깁니다.
+      본업 연봉이 5,000만~6,000만 원이라면 이미 15% 구간에 걸쳐 있으므로, 부업 순수익에는
+      지방소득세 포함 최소 <strong>16.5%</strong>(구간을 넘으면 26.4%)가 적용됩니다.
+    </p>
+
+    <h2>3. 3.3% 원천징수 부업 vs 애드센스·스토어 차이</h2>
+    <ul>
+      <li><strong>3.3% 원천징수(프리랜서):</strong> 수익을 받을 때 미리 3.3%를 떼었으므로, 5월에 합산 결정세액에서 기납부 3.3%를 뺀 차액만 정산합니다. (<a href="/freelancer-tax/" style="color: var(--brand-ink); text-decoration: underline;">3.3% 계산기 보기</a>)</li>
+      <li><strong>애드센스·스마트스토어:</strong> 원천징수 없이 전액 입금되므로, 5월 신고 때 한꺼번에 납부할 세금을 매달 수익의 10~15% 정도 따로 모아두는 것이 안전합니다.</li>
+    </ul>
+
+    <div class="action-row" style="max-width: 360px; margin-top: 28px;">
+      <a href="/njob-tax/" class="tool-cta" style="width: 100%; justify-content: center;">
+        내 N잡 합산 종소세 계산하기 →
+      </a>
+    </div>
+  </article>
+
+  <RelatedTools currentPath="/njob-tax/" />
+</BaseLayout>

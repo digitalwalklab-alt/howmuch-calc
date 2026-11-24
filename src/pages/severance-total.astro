@@ -188,6 +188,7 @@ const jsonLd = [
 
       <div class="action-row">
         <button type="button" class="btn-secondary" id="sev-copy">결과 복사</button>
+        <button type="button" class="btn-secondary" id="sev-share">링크 공유</button>
         <button type="button" class="btn-secondary" id="sev-reset">초기화</button>
       </div>
     </section>
@@ -240,7 +241,7 @@ const jsonLd = [
   <RelatedTools currentPath="/severance-total/" />
 
   <script>
-    import { bindWonInput, formatKoreanUnit, formatWon, parseWon, setWonInputValue } from '../lib/currency';
+    import { bindWonInput, copySummaryWithUrl, formatKoreanUnit, formatWon, parseWon, setWonInputValue, shareCalculator } from '../lib/currency';
 
     const startInput = document.getElementById('start-date') as HTMLInputElement;
     const endInput = document.getElementById('end-date') as HTMLInputElement;
@@ -364,16 +365,12 @@ const jsonLd = [
     });
 
     const btnCopy = document.getElementById('sev-copy') as HTMLButtonElement;
-    btnCopy.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(lastSummary);
-        btnCopy.textContent = '복사 완료!';
-        setTimeout(() => (btnCopy.textContent = '결과 복사'), 1500);
-      } catch {
-        btnCopy.textContent = '복사 실패';
-        setTimeout(() => (btnCopy.textContent = '결과 복사'), 1500);
-      }
-    });
+    btnCopy.addEventListener('click', () => copySummaryWithUrl(lastSummary, '/severance-total/', btnCopy));
+
+    const btnShare = document.getElementById('sev-share') as HTMLButtonElement;
+    btnShare.addEventListener('click', () =>
+      shareCalculator('얼마야 — 퇴사 시 총 수령액 통합 계산기', lastSummary, '/severance-total/', btnShare)
+    );
 
     const btnReset = document.getElementById('sev-reset') as HTMLButtonElement;
     btnReset.addEventListener('click', () => {

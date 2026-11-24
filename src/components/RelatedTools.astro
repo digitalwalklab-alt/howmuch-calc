@@ -6,6 +6,12 @@ interface ToolItem {
   desc: string;
 }
 
+interface GuideItem {
+  href: string;
+  title: string;
+  forPaths: string[];
+}
+
 interface Props {
   currentPath: string;
 }
@@ -63,12 +69,49 @@ const allTools: ToolItem[] = [
   },
 ];
 
+const guides: GuideItem[] = [
+  {
+    href: '/guide/year-end-tax-card-25/',
+    title: '2026 연말정산 신용카드 25% 황금비율 & 체크카드 전환 시점 총정리',
+    forPaths: ['/year-end-tax'],
+  },
+  {
+    href: '/guide/njob-health-insurance-2000/',
+    title: '직장인 부업(N잡) 건강보험료 2,000만 원 기준과 5월 종소세 절세 전략',
+    forPaths: ['/njob-tax', '/freelancer-tax', '/vat-compare'],
+  },
+  {
+    href: '/guide/jeonse-vs-wolse-checklist/',
+    title: '전세 vs 월세 결정 전 꼭 따져야 할 기회비용·손익분기 월세 계산법',
+    forPaths: ['/jeonse-vs-wolse', '/loan-calc'],
+  },
+  {
+    href: '/guide/severance-unemployment-tips/',
+    title: '퇴사 전 반드시 챙겨야 할 퇴직금·미사용 연차수당·실업급여 체크리스트',
+    forPaths: ['/severance-total', '/salary-compare'],
+  },
+];
+
 const normCurrent = currentPath.replace(/\/$/, '') || '/';
 const related = allTools.filter((t) => t.href.replace(/\/$/, '') !== normCurrent).slice(0, 3);
+const matchedGuide = guides.find((g) => g.forPaths.includes(normCurrent));
 ---
 
+{matchedGuide && (
+  <section class="related-section" style="margin-top: 36px; padding-top: 24px;" aria-label="관련 실전 가이드">
+    <a href={matchedGuide.href} class="related-card" style="background: var(--surface-tint); border-color: #cce7e4;">
+      <span class="related-cat">관련 실전 가이드</span>
+      <strong>{matchedGuide.title}</strong>
+      <span style="color: var(--brand-ink); font-weight: 600;">가이드 전체 읽기 →</span>
+    </a>
+  </section>
+)}
+
 <section class="related-section" aria-label="관련 계산기">
-  <h2>함께 보면 좋은 계산기</h2>
+  <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px;">
+    <h2>함께 보면 좋은 계산기</h2>
+    <a href="/guide/" style="font-size: 0.86rem; font-weight: 700; color: var(--brand-ink);">실전 가이드 전체 보기 →</a>
+  </div>
   <div class="related-grid">
     {related.map((item) => (
       <a href={item.href} class="related-card">

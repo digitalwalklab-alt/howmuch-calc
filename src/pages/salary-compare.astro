@@ -180,6 +180,7 @@ const jsonLd = [
 
       <div class="action-row">
         <button type="button" class="btn-secondary" id="sal-copy">결과 복사</button>
+        <button type="button" class="btn-secondary" id="sal-share">링크 공유</button>
         <button type="button" class="btn-secondary" id="sal-reset">초기화</button>
       </div>
     </section>
@@ -211,7 +212,7 @@ const jsonLd = [
   <RelatedTools currentPath="/salary-compare/" />
 
   <script>
-    import { bindWonInput, formatKoreanUnit, formatWon, parseWon, setWonInputValue } from '../lib/currency';
+    import { bindWonInput, copySummaryWithUrl, formatKoreanUnit, formatWon, parseWon, setWonInputValue, shareCalculator } from '../lib/currency';
 
     function calcEarnedDeduction(salary: number): number {
       if (salary <= 5_000_000) return salary * 0.7;
@@ -348,16 +349,12 @@ const jsonLd = [
     });
 
     const btnCopy = document.getElementById('sal-copy') as HTMLButtonElement;
-    btnCopy.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(lastSummary);
-        btnCopy.textContent = '복사 완료!';
-        setTimeout(() => (btnCopy.textContent = '결과 복사'), 1500);
-      } catch {
-        btnCopy.textContent = '복사 실패';
-        setTimeout(() => (btnCopy.textContent = '결과 복사'), 1500);
-      }
-    });
+    btnCopy.addEventListener('click', () => copySummaryWithUrl(lastSummary, '/salary-compare/', btnCopy));
+
+    const btnShare = document.getElementById('sal-share') as HTMLButtonElement;
+    btnShare.addEventListener('click', () =>
+      shareCalculator('얼마야 — 이직 연봉 협상 월 실수령액 비교기', lastSummary, '/salary-compare/', btnShare)
+    );
 
     const btnReset = document.getElementById('sal-reset') as HTMLButtonElement;
     btnReset.addEventListener('click', () => {

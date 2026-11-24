@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: '전세 vs 월세 결정 전 꼭 따져야 할 기회비용·손익분기 월세 계산법',
+  datePublished: '2026-11-24',
+  dateModified: '2026-11-24',
+  author: { '@type': 'Organization', name: '얼마야' },
+  publisher: { '@type': 'Organization', name: '얼마야' },
+};
+---
+
+<BaseLayout
+  title="전세 vs 월세 결정 전 꼭 따져야 할 기회비용·손익분기 월세 계산법"
+  description="전세대출 이자, 보유 현금의 예금·투자 기회비용, 월세 세액공제까지 반영해 전세와 월세 중 진짜 유리한 선택을 가르는 손익분기 월세 계산법을 정리합니다."
+  canonicalPath="/guide/jeonse-vs-wolse-checklist/"
+  breadcrumbCategory="실전 가이드"
+  jsonLd={jsonLd}
+>
+  <article class="guide-section" style="margin-top: 0; padding-top: 0; border-top: none;">
+    <nav class="breadcrumb" aria-label="경로">
+      <a href="/">얼마야</a>
+      <span>/</span>
+      <a href="/guide/">가이드</a>
+      <span>/</span>
+      <span>주거 · 대출</span>
+    </nav>
+
+    <h1>전세 vs 월세 결정 전 꼭 따져야 할 기회비용·손익분기 월세 계산법</h1>
+    <p class="page-lead">
+      "월세는 다 날리는 돈이고 전세는 돌려받으니 무조건 이득"이라는 말은 절반만 맞습니다.
+      금리와 내 돈의 기회비용을 숫자로 넣어야 진짜 손익이 보입니다.
+    </p>
+
+    <div class="disclaimer-box" style="background: var(--surface-tint); border-color: #cce7e4; color: var(--brand-ink); margin: 24px 0;">
+      <strong>내 보증금·대출금리 기준으로 바로 비교해 보고 싶다면?</strong><br />
+      <a href="/jeonse-vs-wolse/" style="display: inline-block; margin-top: 8px; font-weight: 800; text-decoration: underline; text-underline-offset: 3px;">
+        → 전세 vs 월세 진짜 손익 비교기 바로가기
+      </a>
+    </div>
+
+    <h2>1. 전세의 숨은 비용 2가지: 대출이자 + 내 돈의 기회비용</h2>
+    <p>
+      예를 들어 현금 1억 원을 가지고 3억 원 전세(대출 2억, 금리 3.8%)에 들어가면 매달 나가는
+      대출이자는 약 <strong>63만 3,000원</strong>입니다. 여기에 보증금으로 묶인 내 현금 1억 원을
+      연 3.5% 예금에 두었을 때 받을 수 있던 월 이자 약 <strong>29만 2,000원</strong>을 합치면,
+      전세의 실질 월 주거비는 관리비 제외 약 <strong>92만 5,000원</strong>이 됩니다.
+    </p>
+
+    <h2>2. 손익분기 월세를 알면 계약 협상이 쉬워진다</h2>
+    <p>
+      위 예시에서 월세 보증금 3,000만 원 조건이라면, 월세가 <strong>약 83~84만 원 이하</strong>일 때는
+      오히려 월세가 전세보다 실질 비용이 더 적습니다. 집을 보러 가기 전에 내 조건의
+      <strong>손익분기 월세</strong>를 미리 뽑아두면 중개소에서 흔들리지 않고 결정할 수 있습니다.
+    </p>
+
+    <h2>3. 대출 상환방식과 보증보험료까지 함께 체크</h2>
+    <ul>
+      <li>전세대출은 보통 <strong>만기일시상환</strong>이라 매달 이자만 내지만, 주담대 등 분할상환 대출과 비교할 때는 <a href="/loan-calc/" style="color: var(--brand-ink); text-decoration: underline;">대출 이자 비교 계산기</a>로 총이자를 꼭 확인하세요.</li>
+      <li>전세와 월세의 실질 비용 차이가 월 5~10만 원 이내로 비슷하다면, 전세보증보험료·중개보수·보증금 반환 리스크까지 고려해 선택하는 것이 현명합니다.</li>
+    </ul>
+
+    <div class="action-row" style="max-width: 360px; margin-top: 28px;">
+      <a href="/jeonse-vs-wolse/" class="tool-cta" style="width: 100%; justify-content: center;">
+        전세 vs 월세 손익 지금 비교하기 →
+      </a>
+    </div>
+  </article>
+
+  <RelatedTools currentPath="/jeonse-vs-wolse/" />
+</BaseLayout>
