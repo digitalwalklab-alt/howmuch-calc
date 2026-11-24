@@ -88,8 +88,24 @@ const navItems = [
       <script type="application/ld+json" set:html={JSON.stringify(combinedJsonLd.length === 1 ? combinedJsonLd[0] : combinedJsonLd)} />
     )}
 
-    <!-- Google AdSense 승인 후 아래 주석을 해제하고 본인 publisher ID를 입력하세요 -->
-    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+    <!-- Google tag (gtag.js) -->
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-HT6SYN20JX"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'G-HT6SYN20JX');
+    </script>
+
+    <!-- Google AdSense -->
+    <script
+      is:inline
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1437145358254272"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
     <header class="site-header">
