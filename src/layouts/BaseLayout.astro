@@ -61,6 +61,7 @@ const navItems = [
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <meta name="robots" content="index, follow" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="naver-site-verification" content="977d00e8e1f865d8e04dbf066083bc2cd1e5371a" />
     <meta name="theme-color" content="#0F766E" />
     <link rel="canonical" href={canonicalUrl} />
@@ -96,7 +97,10 @@ const navItems = [
     />
 
     {combinedJsonLd.length > 0 && (
-      <script type="application/ld+json" set:html={JSON.stringify(combinedJsonLd.length === 1 ? combinedJsonLd[0] : combinedJsonLd)} />
+      <script
+        type="application/ld+json"
+        set:html={JSON.stringify(combinedJsonLd.length === 1 ? combinedJsonLd[0] : combinedJsonLd).replace(/</g, '\\u003c')}
+      />
     )}
 
     <!-- Google tag (gtag.js) -->
